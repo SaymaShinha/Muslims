@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="#D9E9E7"
+    android:orientation="vertical">
+
+    <TableRow
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/single_surah_background"
+        android:padding="10dp">
+
+        <CheckBox
+            android:id="@+id/checkBox_language_id"
+            android:layout_width="wrap_content"
+            android:layout_height="30dp"
+            android:layout_weight="1.5">
+
+
+        </CheckBox>
+
+        <ImageButton
+            android:layout_height="30dp"
+            android:layout_gravity="end"
+            android:layout_weight=".1"
+            android:background="@android:drawable/ic_menu_delete"
+            android:contentDescription="@string/translalated_quran_download"
+            android:gravity="end"
+            android:visibility="invisible">
+
+        </ImageButton>
+
+    </TableRow>
+</TableLayout>

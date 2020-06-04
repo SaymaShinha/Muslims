@@ -1,0 +1,64 @@
+<resources>
+    <string name="app_name">Muslims</string>
+    <string name="quran">Quran</string>
+    <string name="prayer_time">Prayer Time</string>
+    <string name="settings">Settings</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="home">Home</string>
+    <string name="last_read_verse">Last Read Verse</string>
+    <string name="fajr">Fajr</string>
+    <string name="sunrise">Sunrise</string>
+    <string name="zhuhr">Dhuhr</string>
+    <string name="asr">Asr</string>
+    <string name="sunset">Sunset</string>
+    <string name="maghrib">Maghrib</string>
+    <string name="isha">Isha</string>
+    <string name="imsak">Imsak</string>
+    <string name="midnight">Midnight</string>
+    <string name="prayer_times">Prayer Times</string>
+    <string name="method">Method</string>
+    <string name="location">Location</string>
+    <string name="search_location">Search Location</string>
+    <string name="search_location_ex">Ex: 1420 Austin Bluffs Parkway, Colorado Springs, CO OR
+        25 Hampstead High Street, London, NW3 1RL, United Kingdom OR
+        Sultanahmet Mosque, Istanbul, Turkey</string>
+    <string name="today">Today</string>
+    <string name="surah">Surah</string>
+    <string name="ayah">Ayah</string>
+    <string name="ayah_dot">06DE</string>
+    <string name="translation">Translation</string>
+    <string name="search_language">Search Language</string>
+    <string name="bn_muhiuddin_khan">bn_muhiuddin_khan</string>
+    <string name="ur_ahmed_raza_khan">ur_ahmed_raza_khan</string>
+    <string name="en_abdullah_yusuf_ali">en_abdullah_yusuf_ali</string>
+    <string name="select_all">Select all</string>
+    <string name="deselct_all">Deselct all</string>
+    <string name="next_activity">Next activity</string>
+    <string name="translalated_quran_download">translalated quran download</string>
+    <string name="arabic">Arabic</string>
+    <string name="uthmani">Uthmani</string>
+    <string name="english_transliteration">English Transliteration</string>
+    <string name="arabic_language">Arabic Language</string>
+    <string name="disable">Disable</string>
+    <string name="enable">Enable</string>
+    <string name="search">Search…</string>
+    <string name="sort">Sort &#9660;</string>
+    <string name="end_ayah_1">&#xFD3F;</string>
+    <string name="end_ayah_2">&#xFD3E;</string>
+    <string name="important_quran_ayah">Important Quran Ayah</string>
+    <integer name="btnplusview">1</integer>
+    <integer name="btnpluspos">2</integer>
+    <string name="back_arrow">&#8592;</string>
+    <string name="forward_arrow">&#8594;</string>
+    <string name="calender">Calender</string>
+    <string name="sunday">Sun</string>
+    <string name="monday">Mon</string>
+    <string name="tuesday">Tue</string>
+    <string name="wednesday">Wed</string>
+    <string name="thursday">Thr</string>
+    <string name="friday">Fri</string>
+    <string name="saturday">Sat</string>
+    <string name="last_position">Last Position</string>
+</resources>

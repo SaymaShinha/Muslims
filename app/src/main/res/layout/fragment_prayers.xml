@@ -1,0 +1,345 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".PrayersFragment">
+
+    <!-- TODO: Update blank fragment layout -->
+
+    <TableLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="5dp"
+        android:background="@drawable/single_surah_background">
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/single_surah_background">
+
+            <Button
+                android:id="@+id/prayer_fragment_location_id"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:layout_weight="0.5"
+                android:fontFamily="@font/adamina"
+                android:padding="5dp"
+                android:text="@string/location"
+                android:textAlignment="center"
+                android:textSize="18sp" />
+
+            <!--           <Button
+                               android:id="@+id/prayer_fragment_method_id"
+                               android:layout_height="wrap_content"
+                               android:layout_margin="5dp"
+                               android:layout_weight="0.5"
+                               android:fontFamily="@font/adamina"
+                               android:padding="5dp"
+                               android:text="@string/method"
+                               android:textAlignment="center"
+                               android:textSize="20sp" />
+                 -->
+        </TableRow>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/single_surah_background">
+
+            <TextView
+                android:id="@+id/prayer_fragment_today_date"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@drawable/single_surah_background"
+                android:fontFamily="@font/adamina"
+                android:padding="5dp"
+                android:text="@string/today"
+                android:textAlignment="center"
+                android:textSize="24sp"
+                android:textStyle="bold" />
+        </TableRow>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/single_surah_background">
+
+            <TextView
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@drawable/single_surah_background"
+                android:fontFamily="@font/adamina"
+                android:padding="5dp"
+                android:text="@string/prayer_times"
+                android:textAlignment="center"
+                android:textSize="24sp"
+                android:textStyle="bold" />
+        </TableRow>
+
+        <TableRow
+            android:id="@+id/fajr_tableRow_id"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/single_surah_background">
+
+            <TextView
+                android:id="@+id/prayers_fragment_fajr_textView_id_txt"
+                android:layout_width="95dp"
+                android:layout_height="match_parent"
+                android:background="@drawable/single_surah_background"
+                android:fontFamily="@font/acme"
+                android:padding="5dp"
+                android:text="@string/fajr"
+                android:textAlignment="center"
+                android:textAllCaps="false"
+                android:textSize="30sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/prayers_fragment_fajr_textView_id"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.5"
+                android:background="@drawable/single_surah_background"
+                android:fontFamily="@font/acme"
+                android:padding="5dp"
+                android:text=""
+                android:textAlignment="center"
+                android:textSize="30sp"
+                android:textStyle="bold" />
+        </TableRow>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/single_surah_background">
+
+            <TextView
+                android:id="@+id/prayers_fragment_sunrise_textView_id_txt"
+                android:layout_height="match_parent"
+                android:background="@drawable/single_surah_background"
+                android:fontFamily="@font/acme"
+                android:padding="5dp"
+                android:text="@string/sunrise"
+                android:textAlignment="center"
+                android:textSize="30sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/prayers_fragment_sunrise_textView_id"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.5"
+                android:background="@drawable/single_surah_background"
+                android:fontFamily="@font/acme"
+                android:padding="5dp"
+                android:text=""
+                android:textAlignment="center"
+                android:textSize="30sp"
+                android:textStyle="bold" />
+        </TableRow>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/single_surah_background">
+
+            <TextView
+                android:id="@+id/prayers_fragment_zhuhr_textView_id_txt"
+                android:layout_height="match_parent"
+                android:background="@drawable/single_surah_background"
+                android:fontFamily="@font/acme"
+                android:padding="5dp"
+                android:text="@string/zhuhr"
+                android:textAlignment="center"
+                android:textSize="30sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/prayers_fragment_zhuhr_textView_id"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.5"
+                android:background="@drawable/single_surah_background"
+                android:fontFamily="@font/acme"
+                android:padding="5dp"
+                android:text=""
+                android:textAlignment="center"
+                android:textSize="30sp"
+                android:textStyle="bold" />
+        </TableRow>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/single_surah_background">
+
+            <TextView
+                android:id="@+id/prayers_fragment_asr_textView_id_txt"
+                android:layout_height="match_parent"
+                android:background="@drawable/single_surah_background"
+                android:fontFamily="@font/acme"
+                android:padding="5dp"
+                android:text="@string/asr"
+                android:textAlignment="center"
+                android:textSize="30sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/prayers_fragment_asr_textView_id"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.5"
+                android:background="@drawable/single_surah_background"
+                android:fontFamily="@font/acme"
+                android:padding="5dp"
+                android:text=""
+                android:textAlignment="center"
+                android:textSize="30sp"
+                android:textStyle="bold" />
+        </TableRow>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/single_surah_background">
+
+            <TextView
+                android:id="@+id/prayers_fragment_sunset_textView_id_txt"
+                android:layout_height="match_parent"
+                android:background="@drawable/single_surah_background"
+                android:fontFamily="@font/acme"
+                android:padding="5dp"
+                android:text="@string/sunset"
+                android:textAlignment="center"
+                android:textSize="30sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/prayers_fragment_sunset_textView_id"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.5"
+                android:background="@drawable/single_surah_background"
+                android:fontFamily="@font/acme"
+                android:padding="5dp"
+                android:text=""
+                android:textAlignment="center"
+                android:textSize="30sp"
+                android:textStyle="bold" />
+        </TableRow>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/single_surah_background">
+
+            <TextView
+                android:id="@+id/prayers_fragment_maghrib_textView_id_txt"
+                android:layout_height="match_parent"
+                android:background="@drawable/single_surah_background"
+                android:fontFamily="@font/acme"
+                android:padding="5dp"
+                android:text="@string/maghrib"
+                android:textAlignment="center"
+                android:textSize="30sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/prayers_fragment_maghrib_textView_id"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.5"
+                android:background="@drawable/single_surah_background"
+                android:fontFamily="@font/acme"
+                android:padding="5dp"
+                android:text=""
+                android:textAlignment="center"
+                android:textSize="30sp"
+                android:textStyle="bold" />
+        </TableRow>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/single_surah_background">
+
+            <TextView
+                android:id="@+id/prayers_fragment_isha_textView_id_txt"
+                android:layout_height="match_parent"
+                android:background="@drawable/single_surah_background"
+                android:fontFamily="@font/acme"
+                android:padding="5dp"
+                android:text="@string/isha"
+                android:textAlignment="center"
+                android:textSize="30sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/prayers_fragment_isha_textView_id"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.5"
+                android:background="@drawable/single_surah_background"
+                android:fontFamily="@font/acme"
+                android:padding="5dp"
+                android:text=""
+                android:textAlignment="center"
+                android:textSize="30sp"
+                android:textStyle="bold" />
+        </TableRow>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/prayers_fragment_midnight_textView_id_txt"
+                android:layout_height="match_parent"
+                android:background="@drawable/single_surah_background"
+                android:fontFamily="@font/acme"
+                android:padding="5dp"
+                android:text="@string/midnight"
+                android:textAlignment="center"
+                android:textSize="30sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/prayers_fragment_midnight_textView_id"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.5"
+                android:background="@drawable/single_surah_background"
+                android:fontFamily="@font/acme"
+                android:padding="5dp"
+                android:text=""
+                android:textAlignment="center"
+                android:textSize="30sp"
+                android:textStyle="bold" />
+        </TableRow>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/single_surah_background">
+
+            <TextView
+                android:id="@+id/prayers_fragment_imsak_textView_id_txt"
+                android:layout_height="match_parent"
+                android:background="@drawable/single_surah_background"
+                android:fontFamily="@font/acme"
+                android:padding="5dp"
+                android:text="@string/imsak"
+                android:textAlignment="center"
+                android:textSize="30sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/prayers_fragment_imsak_textView_id"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.5"
+                android:background="@drawable/single_surah_background"
+                android:fontFamily="@font/acme"
+                android:padding="5dp"
+                android:text=""
+                android:textAlignment="center"
+                android:textSize="30sp"
+                android:textStyle="bold" />
+        </TableRow>
+
+    </TableLayout>
+
+</ScrollView>
