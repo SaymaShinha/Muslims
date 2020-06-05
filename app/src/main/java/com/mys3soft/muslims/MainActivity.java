@@ -7,6 +7,7 @@ import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
 import android.bluetooth.BluetoothClass;
 import android.content.Context;
@@ -37,7 +38,7 @@ import java.util.ArrayList;
 
 
 public class MainActivity extends AppCompatActivity {
-    private ProgressDialog mProgressDialog;
+    private static ProgressDialog mProgressDialog;
     private static final String LOG_TAG = "ExternalStorageDemo";
     private static final int REQUEST_ID_READ_PERMISSION = 100;
     private static final int REQUEST_ID_WRITE_PERMISSION = 200;
@@ -54,11 +55,11 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.main_toolbar_id);
+        Toolbar toolbar = findViewById(R.id.main_toolbar_id);
         toolbar.setTitleTextColor(Color.WHITE);
         setSupportActionBar(toolbar);
 
-        BottomNavigationView mBottomNavigationView = (BottomNavigationView) findViewById(R.id.main_bottom_navigation_id);
+        BottomNavigationView mBottomNavigationView = findViewById(R.id.main_bottom_navigation_id);
         db = new DBHelper(this);
 
         mBottomNavigationView.setOnNavigationItemSelectedListener(navigationItemSelectedListener);
@@ -142,8 +143,6 @@ public class MainActivity extends AppCompatActivity {
         ReadAndWriteFiles.readFileAndSaveToDataBase( this,"/Muslims/Quran/islam_public_quran__info.json", "Surah_T");
         ReadAndWriteFiles.readFileAndSaveToDataBase( this,"/Muslims/Quran/islam_public_quran__info__according__to__revelation.json", "Surah_R");
         ReadAndWriteFiles.readFileAndSaveToDataBase( this,"/Muslims/Prayer/islam_public_world_cities.json", "World_Cities");
-        ReadAndWriteFiles.readFileAndSaveQuranToDataBase( this,"/Muslims/Prayer/islam_public_ar__uthmani.json", "Ar_Uthamani");
-        ReadAndWriteFiles.readFileAndSaveQuranToDataBase( this,"/Muslims/Prayer/islam_public_en__english__transliteration.json", "English_Transliteration");
         addLanguage();
     }
 
@@ -177,7 +176,7 @@ public class MainActivity extends AppCompatActivity {
 
     // As soon as the user decides, allows or doesn't allow.
     @Override
-    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
 
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         //
@@ -199,8 +198,6 @@ public class MainActivity extends AppCompatActivity {
                         ReadAndWriteFiles.readFileAndSaveToDataBase( this,"/Muslims/Quran/islam_public_quran__info.json", "Surah_T");
                         ReadAndWriteFiles.readFileAndSaveToDataBase( this,"/Muslims/Quran/islam_public_quran__info__according__to__revelation.json", "Surah_R");
                         ReadAndWriteFiles.readFileAndSaveToDataBase( this,"/Muslims/Prayer/islam_public_world_cities.json", "World_Cities");
-                        ReadAndWriteFiles.readFileAndSaveQuranToDataBase( this,"/Muslims/Prayer/islam_public_ar__uthmani.json", "Ar_Uthamani");
-                        ReadAndWriteFiles.readFileAndSaveQuranToDataBase( this,"/Muslims/Quran/islam_public_en__english__transliteration.json", "English_Transliteration");
                         addLanguage();
                         mProgressDialog.cancel();
                     }
@@ -216,7 +213,7 @@ public class MainActivity extends AppCompatActivity {
     // Download From Urls
 
     private String[] notExistedFiles(String[] filename){
-        ArrayList<String> notExistFileName = new ArrayList<String>();
+        ArrayList<String> notExistFileName = new ArrayList<>();
         File extStore = ReadAndWriteFiles.getAppExternalFilesDir(this);
         for (String item : filename){
             File file = new File(extStore.getAbsolutePath()+item);
@@ -239,7 +236,7 @@ public class MainActivity extends AppCompatActivity {
         mProgressDialog = new ProgressDialog(MainActivity.this);
         mProgressDialog.setMessage("Please Wait While Loading Data");
         mProgressDialog.setIndeterminate(true);
-        mProgressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+        mProgressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
         mProgressDialog.setCancelable(true);
 
         // execute this when the downloader must be fired
@@ -257,11 +254,12 @@ public class MainActivity extends AppCompatActivity {
 
     // usually, subclasses of AsyncTask are declared inside the activity class.
     // that way, you can easily modify the UI thread from here
-    public class DownloadTask extends AsyncTask<String, Integer, String> {
+    public static class DownloadTask extends AsyncTask<String, Integer, String> {
+        @SuppressLint("StaticFieldLeak")
         private Context context;
         private PowerManager.WakeLock mWakeLock;
 
-        public DownloadTask(Context context) {
+        private DownloadTask(Context context) {
             this.context = context;
         }
 
@@ -291,7 +289,7 @@ public class MainActivity extends AppCompatActivity {
 
                     output = new FileOutputStream(ReadAndWriteFiles.getAppExternalFilesDir(context) + stringUrl);
 
-                    byte data[] = new byte[4096];
+                    byte[] data = new byte[4096];
                     long total = 0;
                     int count;
                     while ((count = input.read(data)) != -1) {
@@ -330,9 +328,10 @@ public class MainActivity extends AppCompatActivity {
             // take CPU lock to prevent CPU from going off if the user
             // presses the power button during download
             PowerManager pm = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
+            assert pm != null;
             mWakeLock = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK,
                     getClass().getName());
-            mWakeLock.acquire();
+            mWakeLock.acquire(10*60*1000L /*10 minutes*/);
             mProgressDialog.show();
         }
 
@@ -358,8 +357,8 @@ public class MainActivity extends AppCompatActivity {
 
     public void addLanguage(){
         String[] languageList = new String[]{"Bn_Muhiuddin_Khan", "Ur_Ahmed_Raza_Khan", "En_Abdullah_Yusuf_Ali"};
-        for(int i = 0; i < languageList.length; i++){
-            db.insertLanguage(languageList[i], false);
+        for (String s : languageList) {
+            db.insertLanguage(s, false);
         }
     }
 

@@ -98,7 +98,7 @@ public class PrayersFragment extends Fragment {
      * @return A new instance of fragment PrayersFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static PrayersFragment newInstance(String param1, String param2) {
+    static PrayersFragment newInstance(String param1, String param2) {
         PrayersFragment fragment = new PrayersFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
@@ -121,28 +121,28 @@ public class PrayersFragment extends Fragment {
                              Bundle savedInstanceState) {
         mMainView = inflater.inflate(R.layout.fragment_prayers, container, false);
 
-        mLocationBtn = (Button) mMainView.findViewById(R.id.prayer_fragment_location_id);
+        mLocationBtn = mMainView.findViewById(R.id.prayer_fragment_location_id);
 
-        mTodayDateTV = (TextView) mMainView.findViewById(R.id.prayer_fragment_today_date);
-        mImsakTV = (TextView) mMainView.findViewById(R.id.prayers_fragment_imsak_textView_id);
-        mFajrTV = (TextView) mMainView.findViewById(R.id.prayers_fragment_fajr_textView_id);
-        mSunriseTV = (TextView) mMainView.findViewById(R.id.prayers_fragment_sunrise_textView_id);
-        mDhuhrTV = (TextView) mMainView.findViewById(R.id.prayers_fragment_zhuhr_textView_id);
-        mAsrTV = (TextView) mMainView.findViewById(R.id.prayers_fragment_asr_textView_id);
-        mSunsetTV = (TextView) mMainView.findViewById(R.id.prayers_fragment_sunset_textView_id);
-        mMagribTV = (TextView) mMainView.findViewById(R.id.prayers_fragment_maghrib_textView_id);
-        mIshaTV = (TextView) mMainView.findViewById(R.id.prayers_fragment_isha_textView_id);
-        mMidnightTV = (TextView) mMainView.findViewById(R.id.prayers_fragment_midnight_textView_id);
+        mTodayDateTV = mMainView.findViewById(R.id.prayer_fragment_today_date);
+        mImsakTV = mMainView.findViewById(R.id.prayers_fragment_imsak_textView_id);
+        mFajrTV = mMainView.findViewById(R.id.prayers_fragment_fajr_textView_id);
+        mSunriseTV = mMainView.findViewById(R.id.prayers_fragment_sunrise_textView_id);
+        mDhuhrTV = mMainView.findViewById(R.id.prayers_fragment_zhuhr_textView_id);
+        mAsrTV = mMainView.findViewById(R.id.prayers_fragment_asr_textView_id);
+        mSunsetTV = mMainView.findViewById(R.id.prayers_fragment_sunset_textView_id);
+        mMagribTV = mMainView.findViewById(R.id.prayers_fragment_maghrib_textView_id);
+        mIshaTV = mMainView.findViewById(R.id.prayers_fragment_isha_textView_id);
+        mMidnightTV = mMainView.findViewById(R.id.prayers_fragment_midnight_textView_id);
 
-        mImsakTxt = (TextView) mMainView.findViewById(R.id.prayers_fragment_imsak_textView_id_txt);
-        mFajrTxt = (TextView) mMainView.findViewById(R.id.prayers_fragment_fajr_textView_id_txt);
-        mSunriseTxt = (TextView) mMainView.findViewById(R.id.prayers_fragment_sunrise_textView_id_txt);
-        mDhuhrTxt = (TextView) mMainView.findViewById(R.id.prayers_fragment_zhuhr_textView_id_txt);
-        mAsrTxt = (TextView) mMainView.findViewById(R.id.prayers_fragment_asr_textView_id_txt);
-        mSunsetTxt = (TextView) mMainView.findViewById(R.id.prayers_fragment_sunset_textView_id_txt);
-        mMagribTxt = (TextView) mMainView.findViewById(R.id.prayers_fragment_maghrib_textView_id_txt);
-        mIshaTxt = (TextView) mMainView.findViewById(R.id.prayers_fragment_isha_textView_id_txt);
-        mMidnightTxt = (TextView) mMainView.findViewById(R.id.prayers_fragment_midnight_textView_id_txt);
+        mImsakTxt = mMainView.findViewById(R.id.prayers_fragment_imsak_textView_id_txt);
+        mFajrTxt = mMainView.findViewById(R.id.prayers_fragment_fajr_textView_id_txt);
+        mSunriseTxt = mMainView.findViewById(R.id.prayers_fragment_sunrise_textView_id_txt);
+        mDhuhrTxt = mMainView.findViewById(R.id.prayers_fragment_zhuhr_textView_id_txt);
+        mAsrTxt = mMainView.findViewById(R.id.prayers_fragment_asr_textView_id_txt);
+        mSunsetTxt = mMainView.findViewById(R.id.prayers_fragment_sunset_textView_id_txt);
+        mMagribTxt = mMainView.findViewById(R.id.prayers_fragment_maghrib_textView_id_txt);
+        mIshaTxt = mMainView.findViewById(R.id.prayers_fragment_isha_textView_id_txt);
+        mMidnightTxt = mMainView.findViewById(R.id.prayers_fragment_midnight_textView_id_txt);
 
         context = mMainView.getContext();
         db = new DBHelper(context);
@@ -166,15 +166,15 @@ public class PrayersFragment extends Fragment {
                         Integer.valueOf(string_date[2]));
 
                 if (prayerTimings.getId() != 0){
-                    String imsak = prayerTimings.getImsak().split("[\\(]")[0];
-                    String fajr = prayerTimings.getFajr().split("[\\(]")[0];
-                    String sunrise = prayerTimings.getSunrise().split("[\\(]")[0];
-                    String dhuhr = prayerTimings.getDhuhr().split("[\\(]")[0];
-                    String asr = prayerTimings.getAsr().split("[\\(]")[0];
-                    String sunset = prayerTimings.getSunset().split("[\\(]")[0];
-                    String maghrib = prayerTimings.getMaghrib().split("[\\(]")[0];
-                    String isha = prayerTimings.getIsha().split("[\\(]")[0];
-                    String midnight = prayerTimings.getMidnight().split("[\\(]")[0];
+                    String imsak = prayerTimings.getImsak().split("[(]")[0];
+                    String fajr = prayerTimings.getFajr().split("[(]")[0];
+                    String sunrise = prayerTimings.getSunrise().split("[(]")[0];
+                    String dhuhr = prayerTimings.getDhuhr().split("[(]")[0];
+                    String asr = prayerTimings.getAsr().split("[(]")[0];
+                    String sunset = prayerTimings.getSunset().split("[(]")[0];
+                    String maghrib = prayerTimings.getMaghrib().split("[(]")[0];
+                    String isha = prayerTimings.getIsha().split("[(]")[0];
+                    String midnight = prayerTimings.getMidnight().split("[(]")[0];
 
                     String date = string_date[0]+"/"+string_date[1]+"/"+string_date[2];
 
@@ -206,8 +206,8 @@ public class PrayersFragment extends Fragment {
                 dialog.setTitle("Search For City");
                 dialog.show();
 
-                final EditText search_city = (EditText) dialog.findViewById(R.id.prayer_location_search_id);
-                final ListView search_city_LV = (ListView) dialog.findViewById(R.id.prayer_location_listView_id);
+                final EditText search_city = dialog.findViewById(R.id.prayer_location_search_id);
+                final ListView search_city_LV = dialog.findViewById(R.id.prayer_location_listView_id);
 
                 search_city.addTextChangedListener(new TextWatcher() {
                     @Override
@@ -293,9 +293,9 @@ public class PrayersFragment extends Fragment {
 
         @Override
         protected String doInBackground(String... sUrl) {
-            InputStream input = null;
+            InputStream input;
             HttpURLConnection connection = null;
-            OutputStream output = null;
+            OutputStream output;
             try {
                 location = sUrl[0];
 
@@ -324,7 +324,7 @@ public class PrayersFragment extends Fragment {
                         "/Muslims/Prayer/" + url_value[0] + "_" +
                         url_value[1] + "_" + string_date[1] + "_" + string_date[2]+".json");
 
-                byte data[] = new byte[4096];
+                byte[] data = new byte[4096];
                 long total = 0;
                 int count;
                 while ((count = input.read(data)) != -1) {
@@ -375,10 +375,10 @@ public class PrayersFragment extends Fragment {
             mWakeLock.release();
             mProgressDialog.dismiss();
             if (result != null)
-                Toast.makeText(context, result, Toast.LENGTH_LONG).show();
+                Toast.makeText(context, "Server Error", Toast.LENGTH_LONG).show();
             else{
                 Toast.makeText(context, "File downloaded", Toast.LENGTH_SHORT).show();
-                Tools.SaveDataToSharePrefarence(mMainView.getContext(), "location", location);
+                Tools.SaveDataToSharePrefarence(context, "location", location);
             }
         }
     }

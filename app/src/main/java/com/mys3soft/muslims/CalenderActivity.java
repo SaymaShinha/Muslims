@@ -5,6 +5,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -34,8 +36,8 @@ import java.util.List;
 import java.util.Objects;
 
 public class CalenderActivity extends AppCompatActivity {
-    private ProgressDialog mProgressDialog;
-    private DBHelper db;
+    private static ProgressDialog mProgressDialog;
+    private static DBHelper db;
     private RecyclerView recyclerView;
 
     @Override
@@ -43,12 +45,12 @@ public class CalenderActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_calender);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.calender_toolbar_id);
+        Toolbar toolbar = findViewById(R.id.calender_toolbar_id);
         toolbar.setTitleTextColor(Color.WHITE);
         toolbar.setTitle("Calender");
         setSupportActionBar(toolbar);
 
-        recyclerView = (RecyclerView) findViewById(R.id.calender_recycler_view_id);
+        recyclerView = findViewById(R.id.calender_recycler_view_id);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(CalenderActivity.this);
         recyclerView.setLayoutManager(layoutManager);
 
@@ -66,9 +68,6 @@ public class CalenderActivity extends AppCompatActivity {
             @Override
             public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
                 super.onScrollStateChanged(recyclerView, newState);
-                if (newState == RecyclerView.SCROLL_STATE_IDLE){
-
-                }
             }
         });
     }
@@ -99,14 +98,16 @@ public class CalenderActivity extends AppCompatActivity {
 
             @Override
             public void onCancel(DialogInterface dialog) {
-                downloadTask.cancel(true); //cancel the task
+                downloadTask.cancel(true);//cancel the task
+                onStart();
             }
         });
     }
 
     // usually, subclasses of AsyncTask are declared inside the activity class.
     // that way, you can easily modify the UI thread from here
-    private class DownloadTask extends AsyncTask<String, Integer, String> {
+    private static class DownloadTask extends AsyncTask<String, Integer, String> {
+        @SuppressLint("StaticFieldLeak")
         private Context context;
         private PowerManager.WakeLock mWakeLock;
 
@@ -116,9 +117,9 @@ public class CalenderActivity extends AppCompatActivity {
 
         @Override
         protected String doInBackground(String... sUrl) {
-            InputStream input = null;
+            InputStream input;
             HttpURLConnection connection = null;
-            OutputStream output = null;
+            OutputStream output;
             try {
                 String[] string_date = sUrl[0].split("/");
 
@@ -144,7 +145,7 @@ public class CalenderActivity extends AppCompatActivity {
                 output = new FileOutputStream(ReadAndWriteFiles.getAppExternalFilesDir(context) + "/Muslims/Calender/" +
                         string_date[1] + "_" + string_date[2] + ".json");
 
-                byte data[] = new byte[4096];
+                byte[] data = new byte[4096];
                 long total = 0;
                 int count;
                 while ((count = input.read(data)) != -1) {
@@ -203,7 +204,7 @@ public class CalenderActivity extends AppCompatActivity {
         }
     }
 
-    private void convertStreamToString(InputStream is) {
+    private static void convertStreamToString(InputStream is) {
         BufferedReader reader = new BufferedReader(new InputStreamReader(is));
         StringBuilder sb = new StringBuilder();
 
@@ -230,7 +231,7 @@ public class CalenderActivity extends AppCompatActivity {
                 String hijri_weakday_ar = hijri_json.getJSONObject("weekday").getString("ar");
                 String hijri_designation_abbreviated = hijri_json.getJSONObject("designation").getString("abbreviated");
                 String hijri_designation_expanded = hijri_json.getJSONObject("designation").getString("expanded");
-                String hijri_holiday = hijri_json.getString("holidays").replaceAll("[\\[\\]\\(\\)]", "");
+                String hijri_holiday = hijri_json.getString("holidays").replaceAll("[\\[\\]()]", "");
                 String gregorian_date = gregorian_json.getString("date");
                 int gregorian_day_number = gregorian_json.getInt("day");
                 int gregorian_month_number = gregorian_json.getJSONObject("month").getInt("number");
