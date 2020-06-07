@@ -7,7 +7,6 @@ import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 import android.Manifest;
-import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
 import android.bluetooth.BluetoothClass;
 import android.content.Context;
@@ -47,7 +46,9 @@ public class MainActivity extends AppCompatActivity {
 
     String[] mDefaultDataUrls = {"/Muslims/Quran/islam_public_quran__info.json",
             "/Muslims/Quran/islam_public_quran__info__according__to__revelation.json",
-            "/Muslims/Prayer/islam_public_world_cities.json"};
+            "/Muslims/Prayer/islam_public_world_cities.json",
+            "/Muslims/Quran/islam_public_ar__uthmani.json",
+            "/Muslims/Quran/islam_public_en__english__transliteration.json"};
     String[] mDefaultFiles = {"Muslims/Quran", "Muslims/Prayer", "Muslims/Calender"};
 
     @Override
@@ -115,7 +116,7 @@ public class MainActivity extends AppCompatActivity {
 
 
 ///////////////////////////////////////////////////////////////////////////////
-    
+
 ///////////////////////////////////////////////////////////////////////////////
     // Read And Write File
 
@@ -140,17 +141,34 @@ public class MainActivity extends AppCompatActivity {
                     "You do not allow this app to read files.", Toast.LENGTH_LONG).show();
             return;
         }
-        ReadAndWriteFiles.readFileAndSaveToDataBase( this,"/Muslims/Quran/islam_public_quran__info.json", "Surah_T");
-        ReadAndWriteFiles.readFileAndSaveToDataBase( this,"/Muslims/Quran/islam_public_quran__info__according__to__revelation.json", "Surah_R");
-        ReadAndWriteFiles.readFileAndSaveToDataBase( this,"/Muslims/Prayer/islam_public_world_cities.json", "World_Cities");
+
+        //ReadAndWriteFiles.readFileAndSaveToDataBase( this,"/Muslims/Quran/islam_public_quran__info.json", "Surah_T");
+        //ReadAndWriteFiles.readFileAndSaveToDataBase( this,"/Muslims/Quran/islam_public_quran__info__according__to__revelation.json", "Surah_R");
+        //ReadAndWriteFiles.readFileAndSaveToDataBase( this,"/Muslims/Prayer/islam_public_world_cities.json", "World_Cities");
+        //ReadAndWriteFiles.readFileAndSaveQuranToDataBase( this,"/Muslims/Quran/islam_public_ar__uthmani.json", "Ar_Uthamani");
+        //ReadAndWriteFiles.readFileAndSaveQuranToDataBase( this,"/Muslims/Quran/islam_public_en__english__transliteration.json", "English_Transliteration");
+
+        ThreadDemo T1 = new ThreadDemo("Surah_T");
+        T1.start();
+
+        ThreadDemo T2 = new ThreadDemo("Surah_R");
+        T2.start();
+
+        ThreadDemo T3 = new ThreadDemo("Ar_Uthamani");
+        T3.start();
+
+        ThreadDemo T4 = new ThreadDemo("English_Transliteration");
+        T4.start();
+
+        ThreadDemo T5 = new ThreadDemo("World_Cities");
+        T5.start();
+
         addLanguage();
     }
 
     // With Android Level >= 23, you have to ask the user
     // for permission with device (For example read/write data on the device).
     private boolean askPermission(int requestId, String permissionName) {
-
-
         Log.i(LOG_TAG, "Ask for Permission: " + permissionName);
         Log.i(LOG_TAG, "Build.VERSION.SDK_INT: " + android.os.Build.VERSION.SDK_INT);
 
@@ -191,15 +209,35 @@ public class MainActivity extends AppCompatActivity {
                 }
                 case REQUEST_ID_READ_PERMISSION: {
                     if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                        mProgressDialog = new ProgressDialog(MainActivity.this);
-                        mProgressDialog.setMessage("Please Wait While Loading Data");
-                        mProgressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-                        mProgressDialog.setCancelable(true);
-                        ReadAndWriteFiles.readFileAndSaveToDataBase( this,"/Muslims/Quran/islam_public_quran__info.json", "Surah_T");
-                        ReadAndWriteFiles.readFileAndSaveToDataBase( this,"/Muslims/Quran/islam_public_quran__info__according__to__revelation.json", "Surah_R");
-                        ReadAndWriteFiles.readFileAndSaveToDataBase( this,"/Muslims/Prayer/islam_public_world_cities.json", "World_Cities");
+                        ProgressDialog progressDialog = new ProgressDialog(MainActivity.this);
+                        progressDialog.setMessage("Please Wait While Loading Data");
+                        progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+                        progressDialog.setCancelable(true);
+                        progressDialog.show();
+
+                        //ReadAndWriteFiles.readFileAndSaveToDataBase( this,"/Muslims/Quran/islam_public_quran__info.json", "Surah_T");
+                        //ReadAndWriteFiles.readFileAndSaveToDataBase( this,"/Muslims/Quran/islam_public_quran__info__according__to__revelation.json", "Surah_R");
+                        //ReadAndWriteFiles.readFileAndSaveToDataBase( this,"/Muslims/Prayer/islam_public_world_cities.json", "World_Cities");
+                        //ReadAndWriteFiles.readFileAndSaveQuranToDataBase( this,"/Muslims/Quran/islam_public_ar__uthmani.json", "Ar_Uthamani");
+                        //ReadAndWriteFiles.readFileAndSaveQuranToDataBase( this,"/Muslims/Quran/islam_public_en__english__transliteration.json", "English_Transliteration");
+
+                        ThreadDemo T1 = new ThreadDemo("Surah_T");
+                        T1.start();
+
+                        ThreadDemo T2 = new ThreadDemo("Surah_R");
+                        T2.start();
+
+                        ThreadDemo T3 = new ThreadDemo("Ar_Uthamani");
+                        T3.start();
+
+                        ThreadDemo T4 = new ThreadDemo("English_Transliteration");
+                        T4.start();
+
+                        ThreadDemo T5 = new ThreadDemo("World_Cities");
+                        T5.start();
+
                         addLanguage();
-                        mProgressDialog.cancel();
+                        progressDialog.cancel();
                     }
                 }
             }
@@ -211,7 +249,6 @@ public class MainActivity extends AppCompatActivity {
 
 ///////////////////////////////////////////////////////////////////////////////
     // Download From Urls
-
     private String[] notExistedFiles(String[] filename){
         ArrayList<String> notExistFileName = new ArrayList<>();
         File extStore = ReadAndWriteFiles.getAppExternalFilesDir(this);
@@ -236,7 +273,7 @@ public class MainActivity extends AppCompatActivity {
         mProgressDialog = new ProgressDialog(MainActivity.this);
         mProgressDialog.setMessage("Please Wait While Loading Data");
         mProgressDialog.setIndeterminate(true);
-        mProgressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        mProgressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
         mProgressDialog.setCancelable(true);
 
         // execute this when the downloader must be fired
@@ -255,11 +292,10 @@ public class MainActivity extends AppCompatActivity {
     // usually, subclasses of AsyncTask are declared inside the activity class.
     // that way, you can easily modify the UI thread from here
     public static class DownloadTask extends AsyncTask<String, Integer, String> {
-        @SuppressLint("StaticFieldLeak")
         private Context context;
         private PowerManager.WakeLock mWakeLock;
 
-        private DownloadTask(Context context) {
+        public DownloadTask(Context context) {
             this.context = context;
         }
 
@@ -362,6 +398,56 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    class ThreadDemo extends Thread {
+        private Thread t;
+        private String threadName;
+        private Context context = MainActivity.this;
+
+        ThreadDemo( String name) {
+            threadName = name;
+            System.out.println("Creating " +  threadName );
+        }
+
+        public void run() {
+            System.out.println("Running " +  threadName );
+            try {
+                String last = threadName;
+                switch (last) {
+                    case "Surah_T":
+                        ReadAndWriteFiles.readFileAndSaveToDataBase(context, "/Muslims/Quran/islam_public_quran__info.json", "Surah_T");
+                        break;
+                    case "Surah_R":
+                        ReadAndWriteFiles.readFileAndSaveToDataBase(context, "/Muslims/Quran/islam_public_quran__info__according__to__revelation.json", "Surah_R");
+                        break;
+                    case "World_Cities":
+                        ReadAndWriteFiles.readFileAndSaveToDataBase(context, "/Muslims/Prayer/islam_public_world_cities.json", "World_Cities");
+                        break;
+                    case "Ar_Uthamani":
+                        ReadAndWriteFiles.readFileAndSaveToDataBase(context, "/Muslims/Quran/islam_public_ar__uthmani.json", "Ar_Uthamani");
+                        break;
+                    case "English_Transliteration":
+                        ReadAndWriteFiles.readFileAndSaveQuranToDataBase(context, "/Muslims/Quran/islam_public_en__english__transliteration.json", "English_Transliteration");
+                        break;
+                }
+
+                // Let the thread sleep for a while.
+                Thread.sleep(50);
+            } catch (InterruptedException e) {
+                System.out.println("Thread " +  threadName + " interrupted.");
+            }
+            System.out.println("Thread " +  threadName + " exiting.");
+        }
+
+        public void start () {
+            System.out.println("Starting " +  threadName );
+            if (t == null) {
+                t = new Thread (this, threadName);
+                t.start ();
+            }
+        }
+    }
+
 }
+
 
 

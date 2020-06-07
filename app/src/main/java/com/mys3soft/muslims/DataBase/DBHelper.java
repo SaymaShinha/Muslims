@@ -92,7 +92,7 @@ public class DBHelper extends SQLiteOpenHelper {
     public static final String QURAN_Hasan_Efendi_Nahi_TABLE = "Hasan_Efendi_Nahi";
     public static final String QURAN_Fateh_Muhammad_Jalandhry_TABLE = "Fateh_Muhammad_Jalandhry";
     public static final String QURAN_Jan_Turst_Foundation_TABLE = "Jan_Turst_Foundation";
-    public static final String QURAN_EN_Abdullah_Yusuf_Ali_TABLE = "En_Abdullah_Yusuf_Ali";
+    private static final String QURAN_EN_Abdullah_Yusuf_Ali_TABLE = "En_Abdullah_Yusuf_Ali";
     public static final String QURAN_Abdullah_Muhammad_Basmeih_TABLE = "Abdullah_Muhammad_Basmeih";
     public static final String QURAN_Uthmani_Minimal_TABLE = "Uthmani_Minimal";
     public static final String QURAN_A_S_F_Bubenheim_and_N_Elyas_TABLE = "A_S_F_Bubenheim_and_N_Elyas";
@@ -110,7 +110,7 @@ public class DBHelper extends SQLiteOpenHelper {
     public static final String QURAN_Simple_Clean_TABLE = "Simple_Clean";
     public static final String QURAN_Simple_Minimal_TABLE = "Simple_Minimal";
     public static final String QURAN_Einar_Berg_TABLE = "Einar_Berg";
-    public static final String QURAN_Tajweed_TABLE = "Tajweed";
+    private static final String QURAN_Tajweed_TABLE = "Tajweed";
     public static final String QURAN_Simple_TABLE = "Simple";
     public static final String QURAN_Mohammad_Habib_Shakir_TABLE = "Mohammad_Habib_Shakir";
     public static final String QURAN_Cheriyamundam_Abdul_Hameed_and_Kunhi_Mohammed_Parappoor_TABLE = "Cheriyamundam_Abdul_Hameed_and_Kunhi_Mohammed_Parappoor";
@@ -120,15 +120,15 @@ public class DBHelper extends SQLiteOpenHelper {
     public static final String QURAN_Ignaty_Yulianovich_Krachkovsky_TABLE = "Ignaty_Yulianovich_Krachkovsky";
     public static final String QURAN_King_Fahad_Quran_Complex_TABLE = "King_Fahad_Quran_Complex";
     public static final String QURAN_Ali_Muhsin_Al_Barwani_TABLE = "Ali_Muhsin_Al_Barwani";
-    public static final String QURAN_AR_Uthamani_TABLE = "Ar_Uthamani";
+    private static final String QURAN_AR_Uthamani_TABLE = "Ar_Uthamani";
     public static final String QURAN_Abul_Ala_Maududi_TABLE = "Abul_Ala_Maududi";
     public static final String QURAN_Syed_Zeeshan_Haider_Jawadi_TABLE = "Syed_Zeeshan_Haider_Jawadi";
     public static final String QURAN_Naser_Makarem_Shirazi_TABLE = "Naser_Makarem_Shirazi";
     public static final String QURAN_Jozefa_Bielawskiego_TABLE = "Jozefa_Bielawskiego";
     public static final String QURAN_Mahdi_Elahi_Ghomshei_TABLE = "Mahdi_Elahi_Ghomshei";
-    public static final String QURAN_English_Transliteration_TABLE = "English_Transliteration";
+    private static final String QURAN_English_Transliteration_TABLE = "English_Transliteration";
     public static final String QURAN_Gordy_Semyonovich_Sablukov_TABLE = "Gordy_Semyonovich_Sablukov";
-    public static final String QURAN_BN_Muhiuddin_Khan_TABLE = "Bn_Muhiuddin_Khan";
+    private static final String QURAN_BN_Muhiuddin_Khan_TABLE = "Bn_Muhiuddin_Khan";
     public static final String QURAN_Muhammad_Farooq_Khan_and_Muhammad_Ahmed_TABLE = "Muhammad_Farooq_Khan_and_Muhammad_Ahmed";
     public static final String QURAN_AbdolMohammad_Ayati_TABLE = "AbdolMohammad_Ayati";
     public static final String QURAN_Alikhan_Musayev_TABLE = "Alikhan_Musayev";
@@ -187,6 +187,7 @@ public class DBHelper extends SQLiteOpenHelper {
     private static final String PRAYERTIMINGS_COLUMN_MAGRIB = "magrib";
     private static final String PRAYERTIMINGS_COLUMN_ISHA = "isha";
     private static final String PRAYERTIMINGS_COLUMN_MIDNIGHT = "midnight";
+    private static final String PRAYERTIMINGS_COLUMN_DATE = "date";
     private static final String PRAYERTIMINGS_COLUMN_DAY = "day";
     private static final String PRAYERTIMINGS_COLUMN_MONTH = "month";
     private static final String PRAYERTIMINGS_COLUMN_YEAR = "year";
@@ -226,7 +227,7 @@ public class DBHelper extends SQLiteOpenHelper {
 
 
     public DBHelper(Context context) {
-        super(context, DATABASE_NAME, null, 16);
+        super(context, DATABASE_NAME, null, 19);
     }
 
     @Override
@@ -250,7 +251,7 @@ public class DBHelper extends SQLiteOpenHelper {
                 PRAYERTIMINGS_COLUMN_SUNRISE + " text, " + PRAYERTIMINGS_COLUMN_DHUHR + " text, " +
                 PRAYERTIMINGS_COLUMN_ASR + " text, " + PRAYERTIMINGS_COLUMN_SUNSET + " text, " +
                 PRAYERTIMINGS_COLUMN_MAGRIB + " text, " + PRAYERTIMINGS_COLUMN_ISHA + " text, " +
-                PRAYERTIMINGS_COLUMN_MIDNIGHT + " text, " +
+                PRAYERTIMINGS_COLUMN_MIDNIGHT + " text, " + PRAYERTIMINGS_COLUMN_DATE + " text, " +
                 PRAYERTIMINGS_COLUMN_DAY + " integer, " + PRAYERTIMINGS_COLUMN_MONTH + " integer, " +
                 PRAYERTIMINGS_COLUMN_YEAR + " integer, " + PRAYERTIMINGS_COLUMN_LOCATION + " text)");
 
@@ -378,6 +379,7 @@ public class DBHelper extends SQLiteOpenHelper {
         contentValues.put("subcountry", subcountry);
 
         db.insert(WORLD_LOCATIONS_TABLE, null, contentValues);
+
         db.close();
     }
 
@@ -399,6 +401,8 @@ public class DBHelper extends SQLiteOpenHelper {
 
             cursor.moveToNext();
         }
+
+        cursor.close();
         db.close();
         return world_cities;
     }
@@ -422,6 +426,8 @@ public class DBHelper extends SQLiteOpenHelper {
 
             db.insert(SURAHLIST_TABLE, null, contentValues);
         }
+
+        cursor.close();
         db.close();
     }
 
@@ -443,6 +449,8 @@ public class DBHelper extends SQLiteOpenHelper {
 
             cursor.moveToNext();
         }
+
+        cursor.close();
         db.close();
         return surahList;
     }
@@ -465,6 +473,8 @@ public class DBHelper extends SQLiteOpenHelper {
 
             cursor.moveToNext();
         }
+
+        cursor.close();
         db.close();
         return surahList;
     }
@@ -487,6 +497,8 @@ public class DBHelper extends SQLiteOpenHelper {
 
             cursor.moveToNext();
         }
+
+        cursor.close();
         db.close();
         return surahList;
     }
@@ -509,6 +521,8 @@ public class DBHelper extends SQLiteOpenHelper {
 
             cursor.moveToNext();
         }
+
+        cursor.close();
         db.close();
         return surahList;
     }
@@ -531,6 +545,8 @@ public class DBHelper extends SQLiteOpenHelper {
 
             cursor.moveToNext();
         }
+
+        cursor.close();
         db.close();
         return surahList;
     }
@@ -553,6 +569,8 @@ public class DBHelper extends SQLiteOpenHelper {
 
             cursor.moveToNext();
         }
+
+        cursor.close();
         db.close();
         return surahList;
     }
@@ -575,6 +593,8 @@ public class DBHelper extends SQLiteOpenHelper {
 
             cursor.moveToNext();
         }
+
+        cursor.close();
         db.close();
         return surahList;
     }
@@ -604,6 +624,8 @@ public class DBHelper extends SQLiteOpenHelper {
 
             cursor.moveToNext();
         }
+
+        cursor.close();
         db.close();
         return surahList;
     }
@@ -631,6 +653,8 @@ public class DBHelper extends SQLiteOpenHelper {
 
             db.insert(REV_SURAHLIST_TABLE, null, contentValues);
         }
+
+        cursor.close();
         db.close();
     }
 
@@ -654,6 +678,8 @@ public class DBHelper extends SQLiteOpenHelper {
 
             cursor.moveToNext();
         }
+
+        cursor.close();
         db.close();
         return revSurahList;
     }
@@ -687,6 +713,8 @@ public class DBHelper extends SQLiteOpenHelper {
             cursor.moveToNext();
         }
 
+        cursor.close();
+        db.close();
         return revSurahList;
     }
     //endregion:RevSurah_List
@@ -703,7 +731,7 @@ public class DBHelper extends SQLiteOpenHelper {
 
     //region:Prayer Timings
     public void insertPrayerTime(String imsak, String fajr, String sunrise, String dhuhr, String asr,
-                                 String sunset, String magrib, String isha, String midnight,
+                                 String sunset, String magrib, String isha, String midnight, String date,
                                  int day, int month, int year, String location) {
         SQLiteDatabase db = this.getWritableDatabase();
 
@@ -717,12 +745,14 @@ public class DBHelper extends SQLiteOpenHelper {
         contentValues.put("magrib", magrib);
         contentValues.put("isha", isha);
         contentValues.put("midnight", midnight);
+        contentValues.put("date", date);
         contentValues.put("day", day);
         contentValues.put("month", month);
         contentValues.put("year", year);
         contentValues.put("location", location);
 
         db.insert(PRAYERTIMINGS_TABLE, null, contentValues);
+
         db.close();
     }
 
@@ -734,13 +764,11 @@ public class DBHelper extends SQLiteOpenHelper {
         db.close();
     }
 
-    public PrayerTimings getPrayerTime(String location, int day, int month, int year) {
+    public PrayerTimings getPrayerTime(String location, String date) {
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery("select * from " + PRAYERTIMINGS_TABLE +
                 " where "+ PRAYERTIMINGS_COLUMN_LOCATION +" = '"+ location + "' and "+
-                PRAYERTIMINGS_COLUMN_DAY + " = "+ day +" and "+
-                PRAYERTIMINGS_COLUMN_MONTH + " = "+ month +" and "+
-                PRAYERTIMINGS_COLUMN_YEAR + " = "+ year, null);
+                PRAYERTIMINGS_COLUMN_DATE + " = "+ date, null);
 
         cursor.moveToFirst();
 
@@ -755,11 +783,14 @@ public class DBHelper extends SQLiteOpenHelper {
                     cursor.getString(cursor.getColumnIndex(PRAYERTIMINGS_COLUMN_MAGRIB)),
                     cursor.getString(cursor.getColumnIndex(PRAYERTIMINGS_COLUMN_ISHA)),
                     cursor.getString(cursor.getColumnIndex(PRAYERTIMINGS_COLUMN_MIDNIGHT)),
+                    cursor.getString(cursor.getColumnIndex(PRAYERTIMINGS_COLUMN_DATE)),
                     cursor.getString(cursor.getColumnIndex(PRAYERTIMINGS_COLUMN_LOCATION)));
             return pt;
         }
+
+        cursor.close();
         db.close();
-        return new PrayerTimings(0,"","","","","","","","","","");
+        return new PrayerTimings(0,"","","","","","","","","","", "");
     }
     //endregion:Prayer Timings
 
@@ -775,40 +806,44 @@ public class DBHelper extends SQLiteOpenHelper {
 
         Cursor cursor = db.rawQuery("select * from " + table_name + " where " +
                 QURAN_AYAH_NUMBER +
-                " = '" + ayah_number + "'", null);
+                " = " + ayah_number, null);
 
-        ContentValues contentValues = new ContentValues();
-        contentValues.put(QURAN_IDENTIFIER, identifier);
-        contentValues.put(QURAN_SURAH_NUMBER, surah_number);
-        contentValues.put(QURAN_SURAH_AR_NAME, surah_ar_name);
-        contentValues.put(QURAN_SURAH_EN_NAME, surah_en_name);
-        contentValues.put(QURAN_SURAH_EN_NAME_TRANSLATION, surah_en_name_translation);
-        contentValues.put(QURAN_REVELATION_TYPE, revelation_type);
-        contentValues.put(QURAN_AYAH_NUMBER, ayah_number);
-        contentValues.put(QURAN_TEXT, text);
-        contentValues.put(QURAN_JUZ, juz);
-        contentValues.put(QURAN_MANZIL, manzil);
-        contentValues.put(QURAN_PAGE, page);
-        contentValues.put(QURAN_RUKU, ruku);
-        contentValues.put(QURAN_HIZB_QUARTER, hizb_quarter);
-        contentValues.put(QURAN_SAJDA, sajda);
-        contentValues.put(QURAN_SAJDA_ID, sajda_id);
-        contentValues.put(QURAN_SAJDA_RECOMMENDED, sajda_recommended);
-        contentValues.put(QURAN_SAJDA_OBLIGATORY, sajda_obligatory);
-        contentValues.put(QURAN_LANGUAGE, language);
-        contentValues.put(QURAN_NAME, name);
-        contentValues.put(QURAN_TRANSELATOR_EN_NAME, transelator_en_name);
-        contentValues.put(QURAN_FORMAT, format);
-        contentValues.put(QURAN_TYPE, type);
+        if (cursor.getCount() != 0){
+            ContentValues contentValues = new ContentValues();
+            contentValues.put(QURAN_IDENTIFIER, identifier);
+            contentValues.put(QURAN_SURAH_NUMBER, surah_number);
+            contentValues.put(QURAN_SURAH_AR_NAME, surah_ar_name);
+            contentValues.put(QURAN_SURAH_EN_NAME, surah_en_name);
+            contentValues.put(QURAN_SURAH_EN_NAME_TRANSLATION, surah_en_name_translation);
+            contentValues.put(QURAN_REVELATION_TYPE, revelation_type);
+            contentValues.put(QURAN_AYAH_NUMBER, ayah_number);
+            contentValues.put(QURAN_TEXT, text);
+            contentValues.put(QURAN_JUZ, juz);
+            contentValues.put(QURAN_MANZIL, manzil);
+            contentValues.put(QURAN_PAGE, page);
+            contentValues.put(QURAN_RUKU, ruku);
+            contentValues.put(QURAN_HIZB_QUARTER, hizb_quarter);
+            contentValues.put(QURAN_SAJDA, sajda);
+            contentValues.put(QURAN_SAJDA_ID, sajda_id);
+            contentValues.put(QURAN_SAJDA_RECOMMENDED, sajda_recommended);
+            contentValues.put(QURAN_SAJDA_OBLIGATORY, sajda_obligatory);
+            contentValues.put(QURAN_LANGUAGE, language);
+            contentValues.put(QURAN_NAME, name);
+            contentValues.put(QURAN_TRANSELATOR_EN_NAME, transelator_en_name);
+            contentValues.put(QURAN_FORMAT, format);
+            contentValues.put(QURAN_TYPE, type);
 
-        db.insert(table_name, null, contentValues);
+            db.insert(table_name, null, contentValues);
+        }
+
+        cursor.close();
         db.close();
     }
 
     public List<Ayah> getAllQuranAyah(String Table_name, int surah_number){
         SQLiteDatabase db = this.getReadableDatabase();
         List<Ayah> ayahList = new ArrayList<>();
-        Cursor cursor = db.rawQuery("select * from "+ Table_name +" where "+ QURAN_SURAH_NUMBER +" = "+ surah_number +" order by "+QURAN_AYAH_NUMBER, null);
+        Cursor cursor = db.rawQuery("select * from '"+ Table_name +"' where "+ QURAN_SURAH_NUMBER +" = "+ surah_number +" order by "+QURAN_AYAH_NUMBER, null);
         cursor.moveToFirst();
         while (!cursor.isAfterLast()){
             Ayah ayah = new Ayah(cursor.getInt(cursor.getColumnIndex("id")),
@@ -838,6 +873,10 @@ public class DBHelper extends SQLiteOpenHelper {
 
             cursor.moveToNext();
         }
+
+        cursor.close();
+        db.close();
+
         return ayahList;
     }
 
@@ -874,6 +913,8 @@ public class DBHelper extends SQLiteOpenHelper {
 
             cursor.moveToNext();
         }
+
+        cursor.close();
         db.close();
         return ayahList;
     }
@@ -911,6 +952,8 @@ public class DBHelper extends SQLiteOpenHelper {
 
             cursor.moveToNext();
         }
+
+        cursor.close();
         db.close();
         return ayahList;
     }
@@ -948,6 +991,8 @@ public class DBHelper extends SQLiteOpenHelper {
 
             cursor.moveToNext();
         }
+
+        cursor.close();
         db.close();
         return ayahList;
     }
@@ -968,6 +1013,8 @@ public class DBHelper extends SQLiteOpenHelper {
 
             db.insert(LANGUAGE_TABLE, null, contentValues);
         }
+
+        cursor.close();
         db.close();
     }
 
@@ -985,6 +1032,8 @@ public class DBHelper extends SQLiteOpenHelper {
 
             cursor.moveToNext();
         }
+
+        cursor.close();
         db.close();
         return languageList;
     }
@@ -1013,6 +1062,8 @@ public class DBHelper extends SQLiteOpenHelper {
 
             cursor.moveToNext();
         }
+
+        cursor.close();
         db.close();
         return languageList;
     }
@@ -1031,6 +1082,8 @@ public class DBHelper extends SQLiteOpenHelper {
 
             cursor.moveToNext();
         }
+
+        cursor.close();
         db.close();
         return languageList;
     }
@@ -1078,6 +1131,8 @@ public class DBHelper extends SQLiteOpenHelper {
 
             db.insert(CALENDER_TABLE, null, contentValues);
         }
+
+        cursor.close();
         db.close();
     }
 
@@ -1113,11 +1168,11 @@ public class DBHelper extends SQLiteOpenHelper {
 
             cursor.moveToNext();
         }
+
+        cursor.close();
         db.close();
         return dayList;
     }
     //endregion:Calender
-
-
 
 }

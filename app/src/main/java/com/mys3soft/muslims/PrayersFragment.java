@@ -1,17 +1,27 @@
 package com.mys3soft.muslims;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 
-import androidx.appcompat.widget.Toolbar;
+import androidx.appcompat.app.AlertDialog;
+import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.RecyclerView;
+
 import android.os.PowerManager;
+import android.provider.Settings;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
@@ -41,11 +51,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.sql.Timestamp;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 
@@ -85,6 +91,8 @@ public class PrayersFragment extends Fragment {
     private static final String LOG_TAG = "Ex.St:PrayersFragment";
     private DBHelper db;
     private String[] string_date;
+    private String today;
+
     public PrayersFragment() {
         // Required empty public constructor
     }
@@ -147,6 +155,8 @@ public class PrayersFragment extends Fragment {
         context = mMainView.getContext();
         db = new DBHelper(context);
 
+
+
         // Inflate the layout for this fragment
         return mMainView;
     }
@@ -156,14 +166,13 @@ public class PrayersFragment extends Fragment {
     public void onStart() {
         super.onStart();
 
-        string_date  =  Tools.get_Today_DD_MM_YYYY_FormatedDate().split("/");
-        location = Tools.GetDataFromSharePrefarence(mMainView.getContext(), "location");
+        string_date  =  Tools.get_Today_DD_MM_YYYY_FormatedDate().split("-");
+        location = Tools.GetDataFromSharePrefarence(context, "location");
         if (!location.equals("")) {
             mLocationBtn.setText(location);
             try {
                 PrayerTimings prayerTimings = db.getPrayerTime(location,
-                        Integer.valueOf(string_date[0]), Integer.valueOf(string_date[1]),
-                        Integer.valueOf(string_date[2]));
+                        Tools.get_Today_FormatedDate(format));
 
                 if (prayerTimings.getId() != 0){
                     String imsak = prayerTimings.getImsak().split("[(]")[0];
@@ -176,7 +185,7 @@ public class PrayersFragment extends Fragment {
                     String isha = prayerTimings.getIsha().split("[(]")[0];
                     String midnight = prayerTimings.getMidnight().split("[(]")[0];
 
-                    String date = string_date[0]+"/"+string_date[1]+"/"+string_date[2];
+                    String date = prayerTimings.getDate();
 
                     mTodayDateTV.setText(date);
                     mImsakTV.setText(imsak);
@@ -229,8 +238,7 @@ public class PrayersFragment extends Fragment {
                                 World_Cities world_city = (World_Cities) parent.getItemAtPosition(position);
                                 location = world_city.getCity() + "/" + world_city.getCountry();
                                 PrayerTimings prayerTimings = db.getPrayerTime(location,
-                                        Integer.valueOf(string_date[0]), Integer.valueOf(string_date[1]),
-                                        Integer.valueOf(string_date[2]));
+                                        today);
 
                                 if (prayerTimings.getId() == 0) {
                                     downloadData(location);
@@ -297,9 +305,8 @@ public class PrayersFragment extends Fragment {
             HttpURLConnection connection = null;
             OutputStream output;
             try {
-                location = sUrl[0];
-
                 String[] url_value = sUrl[0].split("/");
+
                 // execute this when the downloader must be fired
                 URL url = new URL("http://api.aladhan.com/v1/calendarByAddress?address=" + url_value[0] + "," + url_value[1] +
                         "&method=2&month=" + string_date[1] + "&year=" + string_date[2]);
@@ -400,12 +407,12 @@ public class PrayersFragment extends Fragment {
             String format = jsonArray.getJSONObject(1)
                     .getJSONObject("date").getJSONObject("gregorian").getString("format").toLowerCase();
 
+            JSONObject jsonObjectDate = jsonArray.getJSONObject(1)
+                    .getJSONObject("date").getJSONObject("gregorian");
 
-            int month = Integer.valueOf(jsonArray.getJSONObject(1)
-                    .getJSONObject("date").getJSONObject("gregorian").getJSONObject("month").getString("number"));
+            int month = Integer.valueOf(jsonObjectDate.getJSONObject("month").getString("number"));
 
-            int year = Integer.valueOf(jsonArray.getJSONObject(1)
-                    .getJSONObject("date").getJSONObject("gregorian").getString("year"));
+            int year = Integer.valueOf(jsonObjectDate.getString("year"));
 
             for (int i = 0; i < jsonArray.length(); i++) {
                 JSONObject p_time = jsonArray.getJSONObject(i).getJSONObject("timings");
@@ -422,6 +429,7 @@ public class PrayersFragment extends Fragment {
                         p_time.getString("Maghrib"),
                         p_time.getString("Isha"),
                         p_time.getString("Midnight"),
+                        jsonObjectDate.getString("date"),
                         day,
                         month,
                         year,
@@ -433,7 +441,6 @@ public class PrayersFragment extends Fragment {
             e.printStackTrace();
         }
     }
-
 
     private void ShowCurrentPrayerTime(String imsak, String fajr, String sunrise, String dhuhr, String asr,
                                        String sunset, String maghrib, String isha, String midnight) {

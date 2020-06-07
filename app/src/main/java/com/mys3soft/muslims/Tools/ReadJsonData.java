@@ -2,6 +2,7 @@ package com.mys3soft.muslims.Tools;
 
 import android.util.JsonReader;
 import android.util.JsonToken;
+import android.util.MalformedJsonException;
 
 import com.mys3soft.muslims.Models.Ayah;
 import com.mys3soft.muslims.Models.RevSurah;
@@ -11,22 +12,20 @@ import com.mys3soft.muslims.Models.World_Cities;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
 public class ReadJsonData {
     //Surahs Json Data
-    public static List<Surah> readSurahsJsonStream(InputStream in) throws IOException {
-        JsonReader reader = new JsonReader(new InputStreamReader(in, "UTF-8"));
-        try {
+    static List<Surah> readSurahsJsonStream(InputStream in) throws IOException {
+        try (JsonReader reader = new JsonReader(new InputStreamReader(in, StandardCharsets.UTF_8))) {
             return readSurahsArray(reader);
-        } finally {
-            reader.close();
         }
     }
 
-    public static List<Surah> readSurahsArray(JsonReader reader) throws IOException {
-        List<Surah> surahs = new ArrayList<Surah>();
+    private static List<Surah> readSurahsArray(JsonReader reader) throws IOException {
+        List<Surah> surahs = new ArrayList<>();
 
         reader.beginArray();
         while (reader.hasNext()) {
@@ -36,7 +35,7 @@ public class ReadJsonData {
         return surahs;
     }
 
-    public static Surah readSurah(JsonReader reader) throws IOException {
+    private static Surah readSurah(JsonReader reader) throws IOException {
         int id = -1;
         int Surah_Number = -1;
         String Surah_Ar_Name = null;
@@ -49,22 +48,31 @@ public class ReadJsonData {
         reader.beginObject();
         while (reader.hasNext()) {
             String name = reader.nextName();
-            if (name.equals("id")) {
-                id = reader.nextInt();
-            } else if (name.equals("surah_number")) {
-                Surah_Number = reader.nextInt();
-            } else if (name.equals("surah_ar_name")) {
-                Surah_Ar_Name = reader.nextString();
-            } else if (name.equals("surah_en_name")) {
-                Surah_En_Name = reader.nextString();
-            } else if (name.equals("surah_en_name_translation")) {
-                Surah_En_Name_Translation = reader.nextString();
-            } else if (name.equals("revelation_type")) {
-                Revelation_Type = reader.nextString();
-            } else if (name.equals("total_ayah")) {
-                Total_Ayah = reader.nextInt();
-            } else {
-                reader.skipValue();
+            switch (name) {
+                case "id":
+                    id = reader.nextInt();
+                    break;
+                case "surah_number":
+                    Surah_Number = reader.nextInt();
+                    break;
+                case "surah_ar_name":
+                    Surah_Ar_Name = reader.nextString();
+                    break;
+                case "surah_en_name":
+                    Surah_En_Name = reader.nextString();
+                    break;
+                case "surah_en_name_translation":
+                    Surah_En_Name_Translation = reader.nextString();
+                    break;
+                case "revelation_type":
+                    Revelation_Type = reader.nextString();
+                    break;
+                case "total_ayah":
+                    Total_Ayah = reader.nextInt();
+                    break;
+                default:
+                    reader.skipValue();
+                    break;
             }
         }
         reader.endObject();
@@ -73,17 +81,14 @@ public class ReadJsonData {
 
 
     //RevSurahs Json Data
-    public static List<RevSurah> readRevSurahsJsonStream(InputStream in) throws IOException {
-        JsonReader reader = new JsonReader(new InputStreamReader(in, "UTF-8"));
-        try {
+    static List<RevSurah> readRevSurahsJsonStream(InputStream in) throws IOException {
+        try (JsonReader reader = new JsonReader(new InputStreamReader(in, StandardCharsets.UTF_8))) {
             return readRevSurahsArray(reader);
-        } finally {
-            reader.close();
         }
     }
 
-    public static List<RevSurah> readRevSurahsArray(JsonReader reader) throws IOException {
-        List<RevSurah> revSurahs = new ArrayList<RevSurah>();
+    private static List<RevSurah> readRevSurahsArray(JsonReader reader) throws IOException {
+        List<RevSurah> revSurahs = new ArrayList<>();
 
         reader.beginArray();
         while (reader.hasNext()) {
@@ -93,7 +98,7 @@ public class ReadJsonData {
         return revSurahs;
     }
 
-    public static RevSurah readRevSurah(JsonReader reader) throws IOException {
+    private static RevSurah readRevSurah(JsonReader reader) throws IOException {
         int id = -1;
         int Chronological_Order = -1;
         int Traditional_Order = -1;
@@ -108,26 +113,37 @@ public class ReadJsonData {
         reader.beginObject();
         while (reader.hasNext()) {
             String name = reader.nextName();
-            if (name.equals("id")) {
-                id = reader.nextInt();
-            } else if (name.equals("chronological_order")) {
-                Chronological_Order = reader.nextInt();
-            }  else if (name.equals("traditional_order")) {
-                Traditional_Order = reader.nextInt();
-            } else if (name.equals("surah_ar_name")) {
-                Surah_Ar_Name = reader.nextString();
-            } else if (name.equals("surah_en_name")) {
-                Surah_En_Name = reader.nextString();
-            } else if (name.equals("surah_en_name_translation")) {
-                Surah_En_Name_Translation = reader.nextString();
-            } else if (name.equals("location_of_revelation")) {
-                Revelation_Type = reader.nextString();
-            } else if (name.equals("total_ayah")) {
-                Total_Ayah = reader.nextInt();
-            }  else if (name.equals("note")) {
-                Note = reader.nextString();
-            } else {
-                reader.skipValue();
+            switch (name) {
+                case "id":
+                    id = reader.nextInt();
+                    break;
+                case "chronological_order":
+                    Chronological_Order = reader.nextInt();
+                    break;
+                case "traditional_order":
+                    Traditional_Order = reader.nextInt();
+                    break;
+                case "surah_ar_name":
+                    Surah_Ar_Name = reader.nextString();
+                    break;
+                case "surah_en_name":
+                    Surah_En_Name = reader.nextString();
+                    break;
+                case "surah_en_name_translation":
+                    Surah_En_Name_Translation = reader.nextString();
+                    break;
+                case "location_of_revelation":
+                    Revelation_Type = reader.nextString();
+                    break;
+                case "total_ayah":
+                    Total_Ayah = reader.nextInt();
+                    break;
+                case "note":
+                    Note = reader.nextString();
+                    break;
+                default:
+                    reader.skipValue();
+                    break;
             }
         }
         reader.endObject();
@@ -137,17 +153,14 @@ public class ReadJsonData {
 
 
     //Ayahs Json Data
-    public static List<Ayah> readAyahsJsonStream(InputStream in) throws IOException {
-        JsonReader reader = new JsonReader(new InputStreamReader(in, "UTF-8"));
-        try {
+    static List<Ayah> readAyahsJsonStream(InputStream in) throws IOException {
+        try (JsonReader reader = new JsonReader(new InputStreamReader(in, StandardCharsets.UTF_8))) {
             return readAyahsArray(reader);
-        } finally {
-            reader.close();
         }
     }
 
-    public static List<Ayah> readAyahsArray(JsonReader reader) throws IOException {
-        List<Ayah> ayahs = new ArrayList<Ayah>();
+    private static List<Ayah> readAyahsArray(JsonReader reader) throws IOException {
+        List<Ayah> ayahs = new ArrayList<>();
 
         reader.beginArray();
         while (reader.hasNext()) {
@@ -157,7 +170,7 @@ public class ReadJsonData {
         return ayahs;
     }
 
-    public static Ayah readAyah(JsonReader reader) throws IOException {
+    private static Ayah readAyah(JsonReader reader) throws IOException {
         int id = -1;
         String identifier = null;
         int surah_number = -1;
@@ -185,54 +198,79 @@ public class ReadJsonData {
         reader.beginObject();
         while (reader.hasNext()) {
             String reader_name = reader.nextName();
-            if (reader_name.equals("id")) {
-                id = reader.nextInt();
-            } else if (reader_name.equals("identifier")) {
-                identifier = reader.nextString();
-            } else if (reader_name.equals("surah_number")) {
-                surah_number = reader.nextInt();
-            } else if (reader_name.equals("surah_ar_name")) {
-                surah_ar_name = reader.nextString();
-            } else if (reader_name.equals("surah_en_name")) {
-                surah_en_name = reader.nextString();
-            } else if (reader_name.equals("surah_en_name_translation")) {
-                surah_en_name_translation = reader.nextString();
-            } else if (reader_name.equals("revelation_type")) {
-                revelation_type = reader.nextString();
-            } else if (reader_name.equals("ayah_number")) {
-                ayah_number = reader.nextInt();
-            } else if (reader_name.equals("text")) {
-                text = reader.nextString();
-            } else if (reader_name.equals("juz")) {
-                juz = reader.nextInt();
-            } else if (reader_name.equals("manzil")) {
-                manzil = reader.nextInt();
-            } else if (reader_name.equals("page")) {
-                page = reader.nextInt();
-            } else if (reader_name.equals("ruku")) {
-                ruku = reader.nextInt();
-            } else if (reader_name.equals("hizb_quarter")) {
-                hizb_quarter = reader.nextInt();
-            } else if (reader_name.equals("sajda")) {
-                sajda = reader.nextBoolean();
-            } else if (reader_name.equals("sajda_id")) {
-                sajda_id = reader.nextInt();
-            } else if (reader_name.equals("sajda_recommended")) {
-                sajda_recommended = reader.nextBoolean();
-            } else if (reader_name.equals("sajda_obligatory")) {
-                sajda_obligatory = reader.nextBoolean();
-            } else if (reader_name.equals("language")) {
-                language = reader.nextString();
-            } else if (reader_name.equals("name")) {
-                name = reader.nextString();
-            } else if (reader_name.equals("transelator_en_name")) {
-                transelator_en_name = reader.nextString();
-            } else if (reader_name.equals("format")) {
-                format = reader.nextString();
-            }  else if (reader_name.equals("type")) {
-                type = reader.nextString();
-            } else {
-                reader.skipValue();
+            switch (reader_name) {
+                case "id":
+                    id = reader.nextInt();
+                    break;
+                case "identifier":
+                    identifier = reader.nextString();
+                    break;
+                case "surah_number":
+                    surah_number = reader.nextInt();
+                    break;
+                case "surah_ar_name":
+                    surah_ar_name = reader.nextString();
+                    break;
+                case "surah_en_name":
+                    surah_en_name = reader.nextString();
+                    break;
+                case "surah_en_name_translation":
+                    surah_en_name_translation = reader.nextString();
+                    break;
+                case "revelation_type":
+                    revelation_type = reader.nextString();
+                    break;
+                case "ayah_number":
+                    ayah_number = reader.nextInt();
+                    break;
+                case "text":
+                    text = reader.nextString();
+                    break;
+                case "juz":
+                    juz = reader.nextInt();
+                    break;
+                case "manzil":
+                    manzil = reader.nextInt();
+                    break;
+                case "page":
+                    page = reader.nextInt();
+                    break;
+                case "ruku":
+                    ruku = reader.nextInt();
+                    break;
+                case "hizb_quarter":
+                    hizb_quarter = reader.nextInt();
+                    break;
+                case "sajda":
+                    sajda = reader.nextBoolean();
+                    break;
+                case "sajda_id":
+                    sajda_id = reader.nextInt();
+                    break;
+                case "sajda_recommended":
+                    sajda_recommended = reader.nextBoolean();
+                    break;
+                case "sajda_obligatory":
+                    sajda_obligatory = reader.nextBoolean();
+                    break;
+                case "language":
+                    language = reader.nextString();
+                    break;
+                case "name":
+                    name = reader.nextString();
+                    break;
+                case "transelator_en_name":
+                    transelator_en_name = reader.nextString();
+                    break;
+                case "format":
+                    format = reader.nextString();
+                    break;
+                case "type":
+                    type = reader.nextString();
+                    break;
+                default:
+                    reader.skipValue();
+                    break;
             }
         }
         reader.endObject();
@@ -243,17 +281,14 @@ public class ReadJsonData {
 
 
     //World_Cities Json Data
-    public static List<World_Cities> readWorld_CitiesJsonStream(InputStream in) throws IOException {
-        JsonReader reader = new JsonReader(new InputStreamReader(in, "UTF-8"));
-        try {
+    static List<World_Cities> readWorld_CitiesJsonStream(InputStream in) throws IOException {
+        try (JsonReader reader = new JsonReader(new InputStreamReader(in, StandardCharsets.UTF_8))) {
             return readWorld_CitiesArray(reader);
-        } finally {
-            reader.close();
         }
     }
 
-    public static List<World_Cities> readWorld_CitiesArray(JsonReader reader) throws IOException {
-        List<World_Cities> world_cities = new ArrayList<World_Cities>();
+    private static List<World_Cities> readWorld_CitiesArray(JsonReader reader) throws IOException {
+        List<World_Cities> world_cities = new ArrayList<>();
 
         reader.beginArray();
         while (reader.hasNext()) {
@@ -263,7 +298,7 @@ public class ReadJsonData {
         return world_cities;
     }
 
-    public static World_Cities readWorld_Cities(JsonReader reader) throws IOException {
+    private static World_Cities readWorld_Cities(JsonReader reader) throws IOException {
         int id = -1;
         String city = null;
         String country = null;
@@ -272,16 +307,22 @@ public class ReadJsonData {
         reader.beginObject();
         while (reader.hasNext()) {
             String name = reader.nextName();
-            if (name.equals("id")) {
-                id = reader.nextInt();
-            } else if (name.equals("city")) {
-                city = reader.nextString();
-            } else if (name.equals("country")) {
-                country = reader.nextString();
-            } else if (name.equals("subcountry")) {
-                subcountry = reader.nextString();
-            } else {
-                reader.skipValue();
+            switch (name) {
+                case "id":
+                    id = reader.nextInt();
+                    break;
+                case "city":
+                    city = reader.nextString();
+                    break;
+                case "country":
+                    country = reader.nextString();
+                    break;
+                case "subcountry":
+                    subcountry = reader.nextString();
+                    break;
+                default:
+                    reader.skipValue();
+                    break;
             }
         }
         reader.endObject();
@@ -291,14 +332,8 @@ public class ReadJsonData {
 
 
 
-
-
-
-
-
-
     public static List<Double> readDoublesArray(JsonReader reader) throws IOException {
-        List<Double> doubles = new ArrayList<Double>();
+        List<Double> doubles = new ArrayList<>();
 
         reader.beginArray();
         while (reader.hasNext()) {

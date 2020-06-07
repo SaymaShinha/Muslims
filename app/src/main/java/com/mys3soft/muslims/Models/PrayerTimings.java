@@ -14,9 +14,10 @@ public class PrayerTimings {
     private String Isha;
     private String Midnight;
     private String Location;
+    private String Date;
 
     public PrayerTimings(int id, String imsak, String fajr, String sunrise, String dhuhr, String asr,
-                         String sunset, String maghrib, String isha, String midnight,
+                         String sunset, String maghrib, String isha, String midnight, String Date,
                          String location){
         this.id = id;
         this.Imsak = imsak;
@@ -28,6 +29,7 @@ public class PrayerTimings {
         this.Maghrib = maghrib;
         this.Isha = isha;
         this.Midnight = midnight;
+        this.Date = Date;
         this.Location = location;
     }
 
@@ -69,6 +71,10 @@ public class PrayerTimings {
 
     public String getMidnight() {
         return Midnight;
+    }
+
+    public String getDate() {
+        return Date;
     }
 
     public String getLocation() {

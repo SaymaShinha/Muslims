@@ -76,6 +76,7 @@ public class QuranFragment extends Fragment {
     private Context context;
     private String last_recite_surah_name;
     private int last_recite_surah_total_ayah, last_recite_surah_number;
+    private SurahAdapter surahAdapter;
 
 
     // TODO: Rename and change types of parameters
@@ -95,7 +96,7 @@ public class QuranFragment extends Fragment {
      * @return A new instance of fragment QuranFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static QuranFragment newInstance(String param1, String param2) {
+    static QuranFragment newInstance(String param1, String param2) {
         QuranFragment fragment = new QuranFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
@@ -117,73 +118,76 @@ public class QuranFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         mMainView = inflater.inflate(R.layout.fragment_quran, container, false);
-        search_quran_ET = (EditText) mMainView.findViewById(R.id.search_surah_id);
+        search_quran_ET = mMainView.findViewById(R.id.search_surah_id);
 
-        mRecyclerView = (RecyclerView) mMainView.findViewById(R.id.quran_fragment_recycler_id);
+        mRecyclerView = mMainView.findViewById(R.id.quran_fragment_recycler_id);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext());
         mRecyclerView.setLayoutManager(layoutManager);
 
         db = new DBHelper(getContext());
         context = mMainView.getContext();
-            // Inflate the layout for this fragment
-            return mMainView;
+        // Inflate the layout for this fragment
+        return mMainView;
     }
 
-        @Override
-        public void onStart () {
-            super.onStart();
+    @Override
+    public void onStart () {
+        super.onStart();
 
-            ////////////////////////////////////////////////////////////////////////
-            last_recite_surah_name = Tools.GetDataFromSharePrefarence(context, "last_recite_surah_name");
-            String last_recite_surah_total_ayah_str = Tools.GetDataFromSharePrefarence(context, "last_recite_surah_total_ayah");
-            if (!last_recite_surah_total_ayah_str.equals("")) {
-                last_recite_surah_total_ayah = Integer.valueOf(last_recite_surah_total_ayah_str);
-            }else {
-                last_recite_surah_total_ayah = 7;
+        ////////////////////////////////////////////////////////////////////////
+        last_recite_surah_name = Tools.GetDataFromSharePrefarence(context, "last_recite_surah_name");
+        String last_recite_surah_total_ayah_str = Tools.GetDataFromSharePrefarence(context, "last_recite_surah_total_ayah");
+        if (!last_recite_surah_total_ayah_str.equals("")) {
+            last_recite_surah_total_ayah = Integer.valueOf(last_recite_surah_total_ayah_str);
+        }else {
+            last_recite_surah_total_ayah = 7;
+        }
+
+        String last_recite_surah_number_str = Tools.GetDataFromSharePrefarence(context, "last_recite_surah_number");
+        if (!last_recite_surah_number_str.equals("")) {
+            last_recite_surah_number = Integer.valueOf(last_recite_surah_number_str);
+        } else {
+            last_recite_surah_number = 1;
+        }
+
+        String ayah_last_position = Tools.GetDataFromSharePrefarence(context, "ayah_last_position");
+
+        LinearLayout last_recite_linearLayout = mMainView.findViewById(R.id.quran_recite_last_position_LinearLayout_id);
+        TextView textView = mMainView.findViewById(R.id.quran_recite_last_position_tv_id);
+
+        String tv_last_reciting_surah = last_recite_surah_name + " ( " + ayah_last_position + " ) ";
+        textView.setText(tv_last_reciting_surah);
+
+
+        last_recite_linearLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(mMainView.getContext(), SurahActivity.class);
+                intent.putExtra("surah_name", last_recite_surah_name);
+                intent.putExtra("total_ayah", last_recite_surah_total_ayah);
+                intent.putExtra("surah_number", last_recite_surah_number);
+                intent.putExtra("model", "last_surah");
+                context.startActivity(intent);
             }
-
-            String last_recite_surah_number_str = Tools.GetDataFromSharePrefarence(context, "last_recite_surah_number");
-            if (!last_recite_surah_number_str.equals("")) {
-                last_recite_surah_number = Integer.valueOf(last_recite_surah_number_str);
-            } else {
-                last_recite_surah_number = 1;
-            }
-
-            String ayah_last_position = Tools.GetDataFromSharePrefarence(context, "ayah_last_position");
-
-            LinearLayout last_recite_linearLayout = (LinearLayout) mMainView.findViewById(R.id.quran_recite_last_position_LinearLayout_id);
-            TextView textView = (TextView) mMainView.findViewById(R.id.quran_recite_last_position_tv_id);
-
-            textView.setText(last_recite_surah_name + " ( " + ayah_last_position + " ) ");
-
-
-            last_recite_linearLayout.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent intent = new Intent(mMainView.getContext(), SurahActivity.class);
-                    intent.putExtra("surah_name", last_recite_surah_name);
-                    intent.putExtra("total_ayah", last_recite_surah_total_ayah);
-                    intent.putExtra("surah_number", last_recite_surah_number);
-                    intent.putExtra("model", "last_surah");
-                    context.startActivity(intent);
-                }
-            });
-            ///////////////////////////////////////////////////
+        });
+        ///////////////////////////////////////////////////
 
 
 
-            final String surah_position = Tools.GetDataFromSharePrefarence(mMainView.getContext(), "surah_position");
-            if (!surah_position.equals("")) {
-                surah_position_num = Integer.valueOf(surah_position);
-            } else {
-                surah_position_num = 0;
-            }
+        final String surah_position = Tools.GetDataFromSharePrefarence(mMainView.getContext(), "surah_position");
+        if (!surah_position.equals("")) {
+            surah_position_num = Integer.valueOf(surah_position);
+        } else {
+            surah_position_num = 0;
+        }
 
-            selectedSort = Tools.GetDataFromSharePrefarence(mMainView.getContext(), "quran_sort_type");
+        selectedSort = Tools.GetDataFromSharePrefarence(mMainView.getContext(), "quran_sort_type");
 
-            if (selectedSort.equals("") || selectedSort.equals("Traditional Order")) {
+        switch (selectedSort) {
+            case "":
+            case "Traditional Order":
                 surahs = db.getAllSurah();
-                final SurahAdapter surahAdapter = new SurahAdapter(mMainView.getContext(), surahs);
+                surahAdapter = new SurahAdapter(mMainView.getContext(), surahs);
                 mRecyclerView.setAdapter(surahAdapter);
 
                 search_quran_ET.addTextChangedListener(new TextWatcher() {
@@ -205,9 +209,10 @@ public class QuranFragment extends Fragment {
 
                     }
                 });
-            } else if (selectedSort.equals("Desc Surah Name")) {
+                break;
+            case "Desc Surah Name":
                 surahs = db.getAllSurahDescSurahName();
-                final SurahAdapter surahAdapter = new SurahAdapter(mMainView.getContext(), surahs);
+                surahAdapter = new SurahAdapter(mMainView.getContext(), surahs);
                 mRecyclerView.setAdapter(surahAdapter);
 
                 search_quran_ET.addTextChangedListener(new TextWatcher() {
@@ -229,9 +234,10 @@ public class QuranFragment extends Fragment {
 
                     }
                 });
-            } else if (selectedSort.equals("Asc Surah Name")) {
+                break;
+            case "Asc Surah Name":
                 surahs = db.getAllSurahAscSurahName();
-                final SurahAdapter surahAdapter = new SurahAdapter(mMainView.getContext(), surahs);
+                surahAdapter = new SurahAdapter(mMainView.getContext(), surahs);
                 mRecyclerView.setAdapter(surahAdapter);
 
                 search_quran_ET.addTextChangedListener(new TextWatcher() {
@@ -253,9 +259,10 @@ public class QuranFragment extends Fragment {
 
                     }
                 });
-            } else if (selectedSort.equals("Meccan Surah")) {
+                break;
+            case "Meccan Surah":
                 surahs = db.getAllMeccanSurah();
-                final SurahAdapter surahAdapter = new SurahAdapter(mMainView.getContext(), surahs);
+                surahAdapter = new SurahAdapter(mMainView.getContext(), surahs);
                 mRecyclerView.setAdapter(surahAdapter);
 
                 search_quran_ET.addTextChangedListener(new TextWatcher() {
@@ -277,9 +284,10 @@ public class QuranFragment extends Fragment {
 
                     }
                 });
-            } else if (selectedSort.equals("Medinan Surah")) {
+                break;
+            case "Medinan Surah":
                 surahs = db.getAllMedinanSurah();
-                final SurahAdapter surahAdapter = new SurahAdapter(mMainView.getContext(), surahs);
+                surahAdapter = new SurahAdapter(mMainView.getContext(), surahs);
                 mRecyclerView.setAdapter(surahAdapter);
 
                 search_quran_ET.addTextChangedListener(new TextWatcher() {
@@ -301,9 +309,10 @@ public class QuranFragment extends Fragment {
 
                     }
                 });
-            } else if (selectedSort.equals("Desc Surah Total Ayah")) {
+                break;
+            case "Desc Surah Total Ayah":
                 surahs = db.getAllSurahOrderByTotalAyahDesc();
-                final SurahAdapter surahAdapter = new SurahAdapter(mMainView.getContext(), surahs);
+                surahAdapter = new SurahAdapter(mMainView.getContext(), surahs);
                 mRecyclerView.setAdapter(surahAdapter);
 
                 search_quran_ET.addTextChangedListener(new TextWatcher() {
@@ -325,9 +334,10 @@ public class QuranFragment extends Fragment {
 
                     }
                 });
-            } else if (selectedSort.equals("Asc Surah Total Ayah")) {
+                break;
+            case "Asc Surah Total Ayah":
                 surahs = db.getAllSurahOrderByTotalAyahAsc();
-                final SurahAdapter surahAdapter = new SurahAdapter(mMainView.getContext(), surahs);
+                surahAdapter = new SurahAdapter(mMainView.getContext(), surahs);
                 mRecyclerView.setAdapter(surahAdapter);
 
                 search_quran_ET.addTextChangedListener(new TextWatcher() {
@@ -349,7 +359,8 @@ public class QuranFragment extends Fragment {
 
                     }
                 });
-            } else if (selectedSort.equals("According To Revelation")) {
+                break;
+            case "According To Revelation":
                 revSurahs = db.getAllRevSurah();
                 final RevSurahAdapter revSurahAdapter = new RevSurahAdapter(mMainView.getContext(), revSurahs);
                 mRecyclerView.setAdapter(revSurahAdapter);
@@ -373,66 +384,67 @@ public class QuranFragment extends Fragment {
 
                     }
                 });
-            }
-
-            quran_sort_btn = (Button) mMainView.findViewById(R.id.quran_sort_btn_id);
-
-            quran_sort_btn.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    final Dialog dialog = new Dialog(mMainView.getContext());
-                    dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-                    dialog.setContentView(R.layout.quran_sort_layout);
-                    dialog.show();
-
-                    int width = (int) (getResources().getDisplayMetrics().widthPixels * 0.70);
-                    int height = WindowManager.LayoutParams.WRAP_CONTENT;
-
-                    Objects.requireNonNull(dialog.getWindow()).setLayout(width, height);
-
-                    sortLV = (ListView) dialog.findViewById(R.id.sort_listview_id);
-
-                    String[] home_string = new String[]{"Traditional Order", "According To Revelation", "Desc Surah Name",
-                            "Asc Surah Name", "Desc Surah Total Ayah", "Asc Surah Total Ayah", "Meccan Surah", "Medinan Surah"};
-                    List<String> home_string_list = new ArrayList<String>(Arrays.asList(home_string));
-                    sortAdapter = new ArrayAdapter<String>(mMainView.getContext(), android.R.layout.simple_list_item_1, home_string_list);
-                    sortLV.setAdapter(sortAdapter);
-
-                    search_sort_ET = (EditText) dialog.findViewById(R.id.search_sort_id);
-
-                    search_sort_ET.addTextChangedListener(new TextWatcher() {
-                        @Override
-                        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-                        }
-
-                        @Override
-                        public void onTextChanged(CharSequence s, int start, int before, int count) {
-                            sortAdapter.getFilter().filter(s);
-                        }
-
-                        @Override
-                        public void afterTextChanged(Editable s) {
-                        }
-                    });
-
-                    sortLV.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                        @Override
-                        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                            selectedSort = sortAdapter.getItem(position).toString();
-                            Tools.SaveDataToSharePrefarence(mMainView.getContext(), "quran_sort_type", selectedSort);
-                            dialog.cancel();
-                        }
-                    });
-
-                    dialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
-                        @Override
-                        public void onCancel(DialogInterface dialog) {
-                            dialog.dismiss();
-                            onStart();
-                        }
-                    });
-                }
-            });
+                break;
         }
+
+        quran_sort_btn = (Button) mMainView.findViewById(R.id.quran_sort_btn_id);
+
+        quran_sort_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                final Dialog dialog = new Dialog(mMainView.getContext());
+                dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                dialog.setContentView(R.layout.quran_sort_layout);
+                dialog.show();
+
+                int width = (int) (getResources().getDisplayMetrics().widthPixels * 0.70);
+                int height = WindowManager.LayoutParams.WRAP_CONTENT;
+
+                Objects.requireNonNull(dialog.getWindow()).setLayout(width, height);
+
+                sortLV = (ListView) dialog.findViewById(R.id.sort_listview_id);
+
+                String[] home_string = new String[]{"Traditional Order", "According To Revelation", "Desc Surah Name",
+                        "Asc Surah Name", "Desc Surah Total Ayah", "Asc Surah Total Ayah", "Meccan Surah", "Medinan Surah"};
+                List<String> home_string_list = new ArrayList<String>(Arrays.asList(home_string));
+                sortAdapter = new ArrayAdapter<String>(mMainView.getContext(), android.R.layout.simple_list_item_1, home_string_list);
+                sortLV.setAdapter(sortAdapter);
+
+                search_sort_ET = (EditText) dialog.findViewById(R.id.search_sort_id);
+
+                search_sort_ET.addTextChangedListener(new TextWatcher() {
+                    @Override
+                    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+                    }
+
+                    @Override
+                    public void onTextChanged(CharSequence s, int start, int before, int count) {
+                        sortAdapter.getFilter().filter(s);
+                    }
+
+                    @Override
+                    public void afterTextChanged(Editable s) {
+                    }
+                });
+
+                sortLV.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                        selectedSort = sortAdapter.getItem(position).toString();
+                        Tools.SaveDataToSharePrefarence(mMainView.getContext(), "quran_sort_type", selectedSort);
+                        dialog.cancel();
+                    }
+                });
+
+                dialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
+                    @Override
+                    public void onCancel(DialogInterface dialog) {
+                        dialog.dismiss();
+                        onStart();
+                    }
+                });
+            }
+        });
+    }
 }

@@ -77,14 +77,14 @@ public class AyahAdapter extends RecyclerView.Adapter<AyahAdapter.ViewHolder> {
 
     @Override
     public int getItemCount() {
-        return total_ayah_number;
+        return ayahList.size();
     }
 
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
+    class ViewHolder extends RecyclerView.ViewHolder {
         private TextView mAyahTV, mEnTransAyah, mAyahTrasTV_1;
 
-        public ViewHolder(@NonNull View itemView) {
+        ViewHolder(@NonNull View itemView) {
             super(itemView);
             mAyahTV = itemView.findViewById(R.id.ayah_id);
             mEnTransAyah = itemView.findViewById(R.id.ayah_en_translation);

@@ -76,37 +76,41 @@ public class ReadAndWriteFiles {
             if (file.exists()) {
                 FileInputStream fIn = new FileInputStream(file);
                 DBHelper db = new DBHelper(context);
-                if (model.equals("Surah_T")) {
-                    int surah_list_row_number = db.getRowNumber("surah_list");
-                    if (surah_list_row_number < 114) {
-                        for (Surah surah : ReadJsonData.readSurahsJsonStream(fIn)) {
-                            db.insertSurah(surah.getSurah_Number(), surah.getSurah_Ar_Name(),
-                                    surah.getSurah_En_Name(), surah.getSurah_En_Name_Translation(),
-                                    surah.getRevelation_Type(), surah.getTotal_Ayah());
+                switch (model) {
+                    case "Surah_T": {
+                        int surah_list_row_number = db.getRowNumber("surah_list");
+                        if (surah_list_row_number < 114) {
+                            for (Surah surah : ReadJsonData.readSurahsJsonStream(fIn)) {
+                                db.insertSurah(surah.getSurah_Number(), surah.getSurah_Ar_Name(),
+                                        surah.getSurah_En_Name(), surah.getSurah_En_Name_Translation(),
+                                        surah.getRevelation_Type(), surah.getTotal_Ayah());
+                            }
                         }
+                        break;
                     }
-                } else if (model.equals("Surah_R")) {
-                    int surah_list_row_number = db.getRowNumber("rev_surah_list");
-                    if (surah_list_row_number < 114) {
-                        for (RevSurah revSurah : ReadJsonData.readRevSurahsJsonStream(fIn)) {
-                            db.insertRevSurah(revSurah.getChronological_Order(), revSurah.getTraditional_Order(),
-                                    revSurah.getSurah_Ar_Name(),
-                                    revSurah.getSurah_En_Name(), revSurah.getSurah_En_Name_Translation(),
-                                    revSurah.getRevelation_Type(), revSurah.getTotal_Ayah(), revSurah.getNote());
+                    case "Surah_R": {
+                        int surah_list_row_number = db.getRowNumber("rev_surah_list");
+                        if (surah_list_row_number < 114) {
+                            for (RevSurah revSurah : ReadJsonData.readRevSurahsJsonStream(fIn)) {
+                                db.insertRevSurah(revSurah.getChronological_Order(), revSurah.getTraditional_Order(),
+                                        revSurah.getSurah_Ar_Name(),
+                                        revSurah.getSurah_En_Name(), revSurah.getSurah_En_Name_Translation(),
+                                        revSurah.getRevelation_Type(), revSurah.getTotal_Ayah(), revSurah.getNote());
+                            }
                         }
+                        break;
                     }
-                } else if (model.equals("World_Cities")) {
-                    int world_city_row_number = db.getRowNumber("world_locations");
-                    if (world_city_row_number < 23019){
-                        for (World_Cities world_location : ReadJsonData.readWorld_CitiesJsonStream(fIn)) {
-                            db.insertWorldLocation(world_location.getCity(), world_location.getCountry(), world_location.getSubcountry());
+                    case "World_Cities":
+                        int world_city_row_number = db.getRowNumber("world_locations");
+                        if (world_city_row_number < 23019) {
+                            for (World_Cities world_location : ReadJsonData.readWorld_CitiesJsonStream(fIn)) {
+                                db.insertWorldLocation(world_location.getCity(), world_location.getCountry(), world_location.getSubcountry());
+                            }
                         }
-                    }
+                        break;
                 }
             }
         } catch (IOException e) {
-            Toast.makeText(context, "Read Error:" + e.getMessage(), Toast.LENGTH_LONG).show();
-            Log.e(LOG_TAG, "Read Error: " + e.getMessage());
             e.printStackTrace();
         }
     }
@@ -139,8 +143,6 @@ public class ReadAndWriteFiles {
                 }
             }
         } catch (IOException e) {
-            Toast.makeText(context, "Read Error:" + e.getMessage(), Toast.LENGTH_LONG).show();
-            Log.e(LOG_TAG, "Read Error: " + e.getMessage());
             e.printStackTrace();
         }
     }

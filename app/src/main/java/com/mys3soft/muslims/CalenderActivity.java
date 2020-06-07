@@ -95,7 +95,6 @@ public class CalenderActivity extends AppCompatActivity {
         final DownloadTask downloadTask = new DownloadTask(CalenderActivity.this);
         downloadTask.execute(urls);
         mProgressDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
-
             @Override
             public void onCancel(DialogInterface dialog) {
                 downloadTask.cancel(true);//cancel the task
@@ -195,7 +194,7 @@ public class CalenderActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(String result) {
             mWakeLock.release();
-            mProgressDialog.dismiss();
+            mProgressDialog.cancel();
             if (result != null)
                 Toast.makeText(context, result, Toast.LENGTH_LONG).show();
             else{
