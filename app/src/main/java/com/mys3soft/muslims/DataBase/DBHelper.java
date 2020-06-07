@@ -768,7 +768,7 @@ public class DBHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery("select * from " + PRAYERTIMINGS_TABLE +
                 " where "+ PRAYERTIMINGS_COLUMN_LOCATION +" = '"+ location + "' and "+
-                PRAYERTIMINGS_COLUMN_DATE + " = "+ date, null);
+                PRAYERTIMINGS_COLUMN_DATE + " = '"+ date +"'", null);
 
         cursor.moveToFirst();
 

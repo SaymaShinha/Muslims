@@ -201,6 +201,7 @@ public class PrayersFragment extends Fragment {
                     ShowCurrentPrayerTime(imsak, fajr, sunrise, dhuhr, asr, sunset, maghrib, isha, midnight);
                 }else{
                     downloadData(location);
+                    Tools.SaveDataToSharePrefarence(context, "location", location);
                 }
             } catch (Exception e) {
                 Toast.makeText(context, e.toString(), Toast.LENGTH_LONG).show();
@@ -242,6 +243,7 @@ public class PrayersFragment extends Fragment {
 
                                 if (prayerTimings.getId() == 0) {
                                     downloadData(location);
+                                    Tools.SaveDataToSharePrefarence(context, "location", location);
                                 }
 
                                 dialog.cancel();
@@ -260,7 +262,6 @@ public class PrayersFragment extends Fragment {
                     public void onCancel(DialogInterface dialog) {
                         //do whatever you want the back key to do
                         dialog.dismiss();
-                        onStart();
                     }
                 });
             }
@@ -273,7 +274,7 @@ public class PrayersFragment extends Fragment {
         mProgressDialog = new ProgressDialog(context);
         mProgressDialog.setMessage("Please Wait While Loading Data");
         mProgressDialog.setIndeterminate(true);
-        mProgressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+        mProgressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
         mProgressDialog.setCancelable(true);
 
         final DownloadTask downloadTask = new DownloadTask(context);
@@ -382,10 +383,9 @@ public class PrayersFragment extends Fragment {
             mWakeLock.release();
             mProgressDialog.dismiss();
             if (result != null)
-                Toast.makeText(context, "Server Error", Toast.LENGTH_LONG).show();
+                Toast.makeText(context, result, Toast.LENGTH_LONG).show();
             else{
                 Toast.makeText(context, "File downloaded", Toast.LENGTH_SHORT).show();
-                Tools.SaveDataToSharePrefarence(context, "location", location);
             }
         }
     }
@@ -429,7 +429,8 @@ public class PrayersFragment extends Fragment {
                         p_time.getString("Maghrib"),
                         p_time.getString("Isha"),
                         p_time.getString("Midnight"),
-                        jsonObjectDate.getString("date"),
+                        jsonArray.getJSONObject(i)
+                                .getJSONObject("date").getJSONObject("gregorian").getString("date"),
                         day,
                         month,
                         year,
