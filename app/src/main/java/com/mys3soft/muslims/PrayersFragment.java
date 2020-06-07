@@ -166,7 +166,7 @@ public class PrayersFragment extends Fragment {
     public void onStart() {
         super.onStart();
 
-        string_date  =  Tools.get_Today_DD_MM_YYYY_FormatedDate().split("-");
+        string_date  =  Tools.get_Today_DD_MM_YYYY_FormatedDate().split("/");
         location = Tools.GetDataFromSharePrefarence(context, "location");
         if (!location.equals("")) {
             mLocationBtn.setText(location);

@@ -104,7 +104,7 @@ public class DBHelper extends SQLiteOpenHelper {
     public static final String QURAN_Abu_Rida_Muhammad_ibn_Ahmad_ibn_Rassoul_TABLE = "Abu_Rida_Muhammad_ibn_Ahmad_ibn_Rassoul";
     public static final String QURAN_Muhammad_Sarwar_TABLE = "Muhammad_Sarwar";
     public static final String QURAN_Abul_A_ala_Maududi_TABLE = "Abul_A_ala_Maududi";
-    public static final String QURAN_UR_Ahmed_Raza_Khan_TABLE = "Ur_Ahmed_Raza_Khan";
+    private static final String QURAN_UR_Ahmed_Raza_Khan_TABLE = "Ur_Ahmed_Raza_Khan";
     public static final String QURAN_Amir_Zaidan_TABLE = "Amir_Zaidan";
     public static final String QURAN_Ministry_of_Awqaf_Egypt_TABLE = "Ministry_of_Awqaf_Egypt";
     public static final String QURAN_Simple_Clean_TABLE = "Simple_Clean";
@@ -773,7 +773,7 @@ public class DBHelper extends SQLiteOpenHelper {
         cursor.moveToFirst();
 
         if(cursor.moveToNext()) {
-            PrayerTimings pt = new PrayerTimings(cursor.getInt(cursor.getColumnIndex(PRAYERTIMINGS_COLUMN_ID)),
+            return new PrayerTimings(cursor.getInt(cursor.getColumnIndex(PRAYERTIMINGS_COLUMN_ID)),
                     cursor.getString(cursor.getColumnIndex(PRAYERTIMINGS_COLUMN_IMSAK)),
                     cursor.getString(cursor.getColumnIndex(PRAYERTIMINGS_COLUMN_FAJR)),
                     cursor.getString(cursor.getColumnIndex(PRAYERTIMINGS_COLUMN_SUNRISE)),
@@ -785,7 +785,6 @@ public class DBHelper extends SQLiteOpenHelper {
                     cursor.getString(cursor.getColumnIndex(PRAYERTIMINGS_COLUMN_MIDNIGHT)),
                     cursor.getString(cursor.getColumnIndex(PRAYERTIMINGS_COLUMN_DATE)),
                     cursor.getString(cursor.getColumnIndex(PRAYERTIMINGS_COLUMN_LOCATION)));
-            return pt;
         }
 
         cursor.close();
@@ -808,7 +807,7 @@ public class DBHelper extends SQLiteOpenHelper {
                 QURAN_AYAH_NUMBER +
                 " = " + ayah_number, null);
 
-        if (cursor.getCount() != 0){
+        if (cursor.getCount() == 0){
             ContentValues contentValues = new ContentValues();
             contentValues.put(QURAN_IDENTIFIER, identifier);
             contentValues.put(QURAN_SURAH_NUMBER, surah_number);
