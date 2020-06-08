@@ -54,7 +54,8 @@ import java.util.Objects;
 
 public class SurahActivity extends AppCompatActivity {
     private RecyclerView mAyahRecyclerView;
-    private List<Ayah> ayahs, en_trans;
+    private List<Ayah> ayahs = new ArrayList<>();
+    private List<Ayah> en_trans = new ArrayList<>();
     private List<Ayah> trans_ayahs = new ArrayList<>();
     private static final String LOG_TAG = "Ex.Store: SurahActivity";
     private AyahAdapter ayahAdapter;
@@ -114,7 +115,6 @@ public class SurahActivity extends AppCompatActivity {
 
         switch (model) {
             case "whole_surah": {
-                ayahs = null;
                 if (!arabic_lang.equals("Disable")) {
                     if (!arabic_lang.equals("")) {
                         ayahs = db.getAllQuranAyah(arabic_lang, surah_number);
@@ -122,8 +122,6 @@ public class SurahActivity extends AppCompatActivity {
                         ayahs = db.getAllQuranAyah("Ar_Uthamani", surah_number);
                     }
                 }
-
-                en_trans = null;
 
                 if (!toggle_en_trans.equals("Disable")) {
                     en_trans = db.getAllQuranAyah("English_Transliteration", surah_number);

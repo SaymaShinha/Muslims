@@ -247,7 +247,6 @@ public class PrayersFragment extends Fragment {
                                     Tools.SaveDataToSharePrefarence(context, "location", location);
                                 }
 
-                                onStart();
                                 dialog.cancel();
                             }
                         });
@@ -264,6 +263,7 @@ public class PrayersFragment extends Fragment {
                     public void onCancel(DialogInterface dialog) {
                         //do whatever you want the back key to do
                         dialog.dismiss();
+                        onStart();
                     }
                 });
             }
