@@ -49,7 +49,7 @@ public class AyahAdapter extends RecyclerView.Adapter<AyahAdapter.ViewHolder> {
 
     @Override
     public void onBindViewHolder(@NonNull AyahAdapter.ViewHolder holder, final int position) {
-        if (ayahList != null){
+        if (ayahList.size() != 0){
             Ayah ayah = ayahList.get(position);
             String ayah_ar = ayah.getText()+context.getResources().getString(R.string.end_ayah_1)+
                     Tools.convertToArabic(position+1)+context.getResources().getString(R.string.end_ayah_2);
@@ -66,7 +66,7 @@ public class AyahAdapter extends RecyclerView.Adapter<AyahAdapter.ViewHolder> {
             holder.mAyahTrasTV_1.setTextSize(0);
         }
 
-        if (englishTransList != null){
+        if (englishTransList.size() != 0){
             Ayah en_trans_ayah = englishTransList.get(position);
             String ayah_trans_1 = position+1+". "+en_trans_ayah.getText();
             holder.mEnTransAyah.setText(ayah_trans_1);

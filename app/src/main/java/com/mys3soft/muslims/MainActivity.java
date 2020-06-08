@@ -423,7 +423,7 @@ public class MainActivity extends AppCompatActivity {
                         ReadAndWriteFiles.readFileAndSaveToDataBase(context, "/Muslims/Prayer/islam_public_world_cities.json", "World_Cities");
                         break;
                     case "Ar_Uthamani":
-                        ReadAndWriteFiles.readFileAndSaveToDataBase(context, "/Muslims/Quran/islam_public_ar__uthmani.json", "Ar_Uthamani");
+                        ReadAndWriteFiles.readFileAndSaveQuranToDataBase(context, "/Muslims/Quran/islam_public_ar__uthmani.json", "Ar_Uthamani");
                         break;
                     case "English_Transliteration":
                         ReadAndWriteFiles.readFileAndSaveQuranToDataBase(context, "/Muslims/Quran/islam_public_en__english__transliteration.json", "English_Transliteration");
