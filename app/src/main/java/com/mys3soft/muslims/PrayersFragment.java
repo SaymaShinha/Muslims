@@ -198,6 +198,7 @@ public class PrayersFragment extends Fragment {
                     mIshaTV.setText(isha);
                     mMidnightTV.setText(midnight);
 
+
                     ShowCurrentPrayerTime(imsak, fajr, sunrise, dhuhr, asr, sunset, maghrib, isha, midnight);
                 }else{
                     downloadData(location);
@@ -246,6 +247,7 @@ public class PrayersFragment extends Fragment {
                                     Tools.SaveDataToSharePrefarence(context, "location", location);
                                 }
 
+                                onStart();
                                 dialog.cancel();
                             }
                         });
@@ -400,6 +402,8 @@ public class PrayersFragment extends Fragment {
             while ((line = reader.readLine()) != null) {
                 sb.append(line).append('\n');
             }
+
+            db.deletePrayerTime(location, Integer.valueOf(string_date[1]));
 
             String response = sb.toString();
             JSONArray jsonArray = new JSONObject(response).getJSONArray("data");

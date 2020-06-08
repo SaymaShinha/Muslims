@@ -94,7 +94,7 @@
                 android:textAlignment="center"
                 android:textAllCaps="false"
                 android:textSize="30sp"
-                android:textStyle="bold" />
+                android:textStyle="normal" />
 
             <TextView
                 android:id="@+id/prayers_fragment_fajr_textView_id"
@@ -106,7 +106,7 @@
                 android:text=""
                 android:textAlignment="center"
                 android:textSize="30sp"
-                android:textStyle="bold" />
+                android:textStyle="normal" />
         </TableRow>
 
         <TableRow
@@ -123,7 +123,7 @@
                 android:text="@string/sunrise"
                 android:textAlignment="center"
                 android:textSize="30sp"
-                android:textStyle="bold" />
+                android:textStyle="normal" />
 
             <TextView
                 android:id="@+id/prayers_fragment_sunrise_textView_id"
@@ -135,7 +135,7 @@
                 android:text=""
                 android:textAlignment="center"
                 android:textSize="30sp"
-                android:textStyle="bold" />
+                android:textStyle="normal" />
         </TableRow>
 
         <TableRow
@@ -152,7 +152,7 @@
                 android:text="@string/zhuhr"
                 android:textAlignment="center"
                 android:textSize="30sp"
-                android:textStyle="bold" />
+                android:textStyle="normal" />
 
             <TextView
                 android:id="@+id/prayers_fragment_zhuhr_textView_id"
@@ -164,7 +164,7 @@
                 android:text=""
                 android:textAlignment="center"
                 android:textSize="30sp"
-                android:textStyle="bold" />
+                android:textStyle="normal" />
         </TableRow>
 
         <TableRow
@@ -181,7 +181,7 @@
                 android:text="@string/asr"
                 android:textAlignment="center"
                 android:textSize="30sp"
-                android:textStyle="bold" />
+                android:textStyle="normal" />
 
             <TextView
                 android:id="@+id/prayers_fragment_asr_textView_id"
@@ -193,7 +193,7 @@
                 android:text=""
                 android:textAlignment="center"
                 android:textSize="30sp"
-                android:textStyle="bold" />
+                android:textStyle="normal" />
         </TableRow>
 
         <TableRow
@@ -210,7 +210,7 @@
                 android:text="@string/sunset"
                 android:textAlignment="center"
                 android:textSize="30sp"
-                android:textStyle="bold" />
+                android:textStyle="normal" />
 
             <TextView
                 android:id="@+id/prayers_fragment_sunset_textView_id"
@@ -222,7 +222,7 @@
                 android:text=""
                 android:textAlignment="center"
                 android:textSize="30sp"
-                android:textStyle="bold" />
+                android:textStyle="normal" />
         </TableRow>
 
         <TableRow
@@ -239,7 +239,7 @@
                 android:text="@string/maghrib"
                 android:textAlignment="center"
                 android:textSize="30sp"
-                android:textStyle="bold" />
+                android:textStyle="normal" />
 
             <TextView
                 android:id="@+id/prayers_fragment_maghrib_textView_id"
@@ -251,7 +251,7 @@
                 android:text=""
                 android:textAlignment="center"
                 android:textSize="30sp"
-                android:textStyle="bold" />
+                android:textStyle="normal" />
         </TableRow>
 
         <TableRow
@@ -268,7 +268,7 @@
                 android:text="@string/isha"
                 android:textAlignment="center"
                 android:textSize="30sp"
-                android:textStyle="bold" />
+                android:textStyle="normal" />
 
             <TextView
                 android:id="@+id/prayers_fragment_isha_textView_id"
@@ -280,7 +280,7 @@
                 android:text=""
                 android:textAlignment="center"
                 android:textSize="30sp"
-                android:textStyle="bold" />
+                android:textStyle="normal" />
         </TableRow>
 
         <TableRow
@@ -296,7 +296,7 @@
                 android:text="@string/midnight"
                 android:textAlignment="center"
                 android:textSize="30sp"
-                android:textStyle="bold" />
+                android:textStyle="normal" />
 
             <TextView
                 android:id="@+id/prayers_fragment_midnight_textView_id"
@@ -308,7 +308,7 @@
                 android:text=""
                 android:textAlignment="center"
                 android:textSize="30sp"
-                android:textStyle="bold" />
+                android:textStyle="normal" />
         </TableRow>
 
         <TableRow
@@ -325,7 +325,7 @@
                 android:text="@string/imsak"
                 android:textAlignment="center"
                 android:textSize="30sp"
-                android:textStyle="bold" />
+                android:textStyle="normal" />
 
             <TextView
                 android:id="@+id/prayers_fragment_imsak_textView_id"
@@ -337,7 +337,7 @@
                 android:text=""
                 android:textAlignment="center"
                 android:textSize="30sp"
-                android:textStyle="bold" />
+                android:textStyle="normal" />
         </TableRow>
 
     </TableLayout>
