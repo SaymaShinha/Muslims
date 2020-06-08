@@ -74,40 +74,36 @@ public class ReadAndWriteFiles {
         try {
             File file = new File(path);
             if (file.exists()) {
-                FileInputStream fIn = new FileInputStream(file);
                 DBHelper db = new DBHelper(context);
-                switch (model) {
-                    case "Surah_T": {
-                        int surah_list_row_number = db.getRowNumber("surah_list");
-                        if (surah_list_row_number < 114) {
-                            for (Surah surah : ReadJsonData.readSurahsJsonStream(fIn)) {
-                                db.insertSurah(surah.getSurah_Number(), surah.getSurah_Ar_Name(),
-                                        surah.getSurah_En_Name(), surah.getSurah_En_Name_Translation(),
-                                        surah.getRevelation_Type(), surah.getTotal_Ayah());
-                            }
+                if (model.equals("Surah_T")) {
+                    int surah_list_row_number = db.getRowNumber("surah_list");
+                    if (surah_list_row_number < 114) {
+                        FileInputStream fIn = new FileInputStream(file);
+                        for (Surah surah : ReadJsonData.readSurahsJsonStream(fIn)) {
+                            db.insertSurah(surah.getSurah_Number(), surah.getSurah_Ar_Name(),
+                                    surah.getSurah_En_Name(), surah.getSurah_En_Name_Translation(),
+                                    surah.getRevelation_Type(), surah.getTotal_Ayah());
                         }
-                        break;
                     }
-                    case "Surah_R": {
-                        int surah_list_row_number = db.getRowNumber("rev_surah_list");
-                        if (surah_list_row_number < 114) {
-                            for (RevSurah revSurah : ReadJsonData.readRevSurahsJsonStream(fIn)) {
-                                db.insertRevSurah(revSurah.getChronological_Order(), revSurah.getTraditional_Order(),
-                                        revSurah.getSurah_Ar_Name(),
-                                        revSurah.getSurah_En_Name(), revSurah.getSurah_En_Name_Translation(),
-                                        revSurah.getRevelation_Type(), revSurah.getTotal_Ayah(), revSurah.getNote());
-                            }
+                } else if (model.equals("Surah_R")) {
+                    int surah_list_row_number = db.getRowNumber("rev_surah_list");
+                    if (surah_list_row_number < 114) {
+                        FileInputStream fIn = new FileInputStream(file);
+                        for (RevSurah revSurah : ReadJsonData.readRevSurahsJsonStream(fIn)) {
+                            db.insertRevSurah(revSurah.getChronological_Order(), revSurah.getTraditional_Order(),
+                                    revSurah.getSurah_Ar_Name(),
+                                    revSurah.getSurah_En_Name(), revSurah.getSurah_En_Name_Translation(),
+                                    revSurah.getRevelation_Type(), revSurah.getTotal_Ayah(), revSurah.getNote());
                         }
-                        break;
                     }
-                    case "World_Cities":
-                        int world_city_row_number = db.getRowNumber("world_locations");
-                        if (world_city_row_number < 23019) {
-                            for (World_Cities world_location : ReadJsonData.readWorld_CitiesJsonStream(fIn)) {
-                                db.insertWorldLocation(world_location.getCity(), world_location.getCountry(), world_location.getSubcountry());
-                            }
+                } else if (model.equals("World_Cities")) {
+                    int world_city_row_number = db.getRowNumber("world_locations");
+                    if (world_city_row_number < 23019) {
+                        FileInputStream fIn = new FileInputStream(file);
+                        for (World_Cities world_location : ReadJsonData.readWorld_CitiesJsonStream(fIn)) {
+                            db.insertWorldLocation(world_location.getCity(), world_location.getCountry(), world_location.getSubcountry());
                         }
-                        break;
+                    }
                 }
             }
         } catch (IOException e) {

@@ -77,7 +77,14 @@ public class AyahAdapter extends RecyclerView.Adapter<AyahAdapter.ViewHolder> {
 
     @Override
     public int getItemCount() {
-        return ayahList.size();
+        if (ayahList.size() != 0){
+            return ayahList.size();
+        } else if(transAyahList_1.size() != 0){
+            return transAyahList_1.size();
+        } else if(englishTransList.size() != 0){
+            return englishTransList.size();
+        }
+        return 0;
     }
 
 

@@ -58,6 +58,7 @@ public class CalenderActivity extends AppCompatActivity {
         String string_date = Tools.get_Today_DD_MM_YYYY_FormatedDate();
 
         showCalender(string_date);
+        onStart();
     }
 
     @Override
