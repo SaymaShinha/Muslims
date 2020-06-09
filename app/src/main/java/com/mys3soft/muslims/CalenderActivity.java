@@ -248,6 +248,9 @@ public class CalenderActivity extends AppCompatActivity {
                         gregorian_designation_abbreviated, gregorian_designation_expanded);
             }
 
+            JSONObject gre_cal = jsonArray.getJSONObject(0).getJSONObject("gregorian");
+            db.deleteCalender(gre_cal.getJSONObject("month").getInt("number"),
+                    gre_cal.getInt("day"));
         } catch (IOException | JSONException e) {
             e.printStackTrace();
         }

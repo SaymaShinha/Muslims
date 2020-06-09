@@ -21,13 +21,14 @@ public class ArabicLangActivity extends AppCompatActivity {
     private ArrayAdapter<String> arabic_lang_adapter;
     private ListView arabicLangLV;
     private EditText search_arabic_lang_ET;
+    private String[] arabic_lang;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_arabic_lang);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.arabic_lang_toolbar_id);
+        Toolbar toolbar = findViewById(R.id.arabic_lang_toolbar_id);
         toolbar.setTitleTextColor(Color.WHITE);
         toolbar.setTitle("Arabic");
         setSupportActionBar(toolbar);
@@ -37,17 +38,25 @@ public class ArabicLangActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
 
-        String selected_arabic_lang = Tools.GetDataFromSharePrefarence(ArabicLangActivity.this, "Arabic_Lang");
+        Bundle bundle = getIntent().getExtras();
+        assert bundle != null;
+        String toggle_value = bundle.getString("toggle_value");
 
-        arabicLangLV = (ListView) findViewById(R.id.arabic_lang_listview_id);
-        String[] arabic_lang = new String[]{"Disable", "Ar_Uthamani"};
-        List<String> arabic_lang_list = new ArrayList<String>(Arrays.asList(arabic_lang));
-        arabic_lang_adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, arabic_lang_list);
+        assert toggle_value != null;
+        if (toggle_value.equals("Disable")){
+            arabic_lang = new String[]{"Enable", "Ar_Uthamani"};
+        } else{
+            arabic_lang = new String[]{"Disable", "Ar_Uthamani"};
+        }
+
+        arabicLangLV = findViewById(R.id.arabic_lang_listview_id);
+        List<String> arabic_lang_list = new ArrayList<>(Arrays.asList(arabic_lang));
+        arabic_lang_adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, arabic_lang_list);
         arabicLangLV.setAdapter(arabic_lang_adapter);
 
-        arabicLangLV.getItemIdAtPosition(0);
+        arabic_lang_adapter.getItem(0);
 
-        search_arabic_lang_ET = (EditText) findViewById(R.id.search_arabic_lang_id);
+        search_arabic_lang_ET = findViewById(R.id.search_arabic_lang_id);
 
         search_arabic_lang_ET.addTextChangedListener(new TextWatcher() {
             @Override

@@ -61,4 +61,11 @@
     <string name="friday">Fri</string>
     <string name="saturday">Sat</string>
     <string name="last_position">Last Position</string>
+    <string name="add_to_note">Add To Note</string>
+    <string name="add_note">Add Note</string>
+    <string name="share">Share</string>
+    <string name="menu_icon">&#9776;</string>
+    <string name="city">City</string>
+    <string name="country">Country</string>
+    <string name="submit">Submit</string>
 </resources>

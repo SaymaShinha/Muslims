@@ -17,6 +17,7 @@ import android.os.Bundle;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -24,19 +25,22 @@ import android.os.PowerManager;
 import android.provider.Settings;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
-import com.mys3soft.muslims.Adapter.PrayerLocationAdapter;
 import com.mys3soft.muslims.DataBase.DBHelper;
+import com.mys3soft.muslims.Models.Calender;
 import com.mys3soft.muslims.Models.PrayerTimings;
-import com.mys3soft.muslims.Models.World_Cities;
 import com.mys3soft.muslims.Tools.ReadAndWriteFiles;
 import com.mys3soft.muslims.Tools.Tools;
 import org.json.JSONArray;
@@ -52,6 +56,7 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
@@ -83,15 +88,21 @@ public class PrayersFragment extends Fragment {
     private Button mLocationBtn, mMethodBtn;
     private View mMainView;
     private TextView mImsakTV, mFajrTV, mSunriseTV, mDhuhrTV,
-            mAsrTV, mSunsetTV, mMagribTV, mIshaTV, mMidnightTV, mTodayDateTV,
+            mAsrTV, mSunsetTV, mMagribTV, mIshaTV, mMidnightTV, mDateTV,
             mImsakTxt, mFajrTxt, mSunriseTxt, mDhuhrTxt, mAsrTxt,
-            mSunsetTxt, mMagribTxt, mIshaTxt, mMidnightTxt, mTodayDateTxt;
+            mSunsetTxt, mMagribTxt, mIshaTxt, mMidnightTxt, mDateTxt;
 
 
     private static final String LOG_TAG = "Ex.St:PrayersFragment";
     private DBHelper db;
     private String[] string_date;
     private String today;
+
+    private ArrayAdapter<String> ptAd;
+    private EditText cityET, countryET;
+    private String prayer_timings_file_name;
+
+
 
     public PrayersFragment() {
         // Required empty public constructor
@@ -131,7 +142,7 @@ public class PrayersFragment extends Fragment {
 
         mLocationBtn = mMainView.findViewById(R.id.prayer_fragment_location_id);
 
-        mTodayDateTV = mMainView.findViewById(R.id.prayer_fragment_today_date);
+        mDateTV = mMainView.findViewById(R.id.prayer_fragment_today_date);
         mImsakTV = mMainView.findViewById(R.id.prayers_fragment_imsak_textView_id);
         mFajrTV = mMainView.findViewById(R.id.prayers_fragment_fajr_textView_id);
         mSunriseTV = mMainView.findViewById(R.id.prayers_fragment_sunrise_textView_id);
@@ -155,58 +166,59 @@ public class PrayersFragment extends Fragment {
         context = mMainView.getContext();
         db = new DBHelper(context);
 
-
-
         // Inflate the layout for this fragment
         return mMainView;
     }
-
 
     @Override
     public void onStart() {
         super.onStart();
 
-        string_date  =  Tools.get_Today_DD_MM_YYYY_FormatedDate().split("/");
-        location = Tools.GetDataFromSharePrefarence(context, "location");
-        if (!location.equals("")) {
-            mLocationBtn.setText(location);
-            try {
-                PrayerTimings prayerTimings = db.getPrayerTime(location,
-                        Tools.get_Today_FormatedDate(format));
+        today = Tools.get_Today_FormatedDate(format);
+        string_date  =  today.split("-");
+        location = Tools.GetDataFromSharePrefarence(context, "Location");
 
-                if (prayerTimings.getId() != 0){
-                    String imsak = prayerTimings.getImsak().split("[(]")[0];
-                    String fajr = prayerTimings.getFajr().split("[(]")[0];
-                    String sunrise = prayerTimings.getSunrise().split("[(]")[0];
-                    String dhuhr = prayerTimings.getDhuhr().split("[(]")[0];
-                    String asr = prayerTimings.getAsr().split("[(]")[0];
-                    String sunset = prayerTimings.getSunset().split("[(]")[0];
-                    String maghrib = prayerTimings.getMaghrib().split("[(]")[0];
-                    String isha = prayerTimings.getIsha().split("[(]")[0];
-                    String midnight = prayerTimings.getMidnight().split("[(]")[0];
+        mLocationBtn.setText(location);
+        try {
+            String date = Tools.GetDataFromSharePrefarence(context,"Date");
 
-                    String date = prayerTimings.getDate();
+            if (date.equals(today)){
+                String imsak = Tools.GetDataFromSharePrefarence(context,"Imsak").split("[(]")[0];
+                String fajr = Tools.GetDataFromSharePrefarence(context,"Fajr").split("[(]")[0];
+                String sunrise = Tools.GetDataFromSharePrefarence(context,"Sunrise").split("[(]")[0];
+                String dhuhr = Tools.GetDataFromSharePrefarence(context,"Dhuhr").split("[(]")[0];
+                String asr = Tools.GetDataFromSharePrefarence(context,"Asr").split("[(]")[0];
+                String sunset = Tools.GetDataFromSharePrefarence(context,"Sunset").split("[(]")[0];
+                String maghrib = Tools.GetDataFromSharePrefarence(context,"Maghrib").split("[(]")[0];
+                String isha = Tools.GetDataFromSharePrefarence(context,"Isha").split("[(]")[0];
+                String midnight = Tools.GetDataFromSharePrefarence(context,"Midnight").split("[(]")[0];
 
-                    mTodayDateTV.setText(date);
-                    mImsakTV.setText(imsak);
-                    mFajrTV.setText(fajr);
-                    mSunriseTV.setText(sunrise);
-                    mDhuhrTV.setText(dhuhr);
-                    mAsrTV.setText(asr);
-                    mSunsetTV.setText(sunset);
-                    mMagribTV.setText(maghrib);
-                    mIshaTV.setText(isha);
-                    mMidnightTV.setText(midnight);
+                mDateTV.setText(date);
+                mImsakTV.setText(imsak);
+                mFajrTV.setText(fajr);
+                mSunriseTV.setText(sunrise);
+                mDhuhrTV.setText(dhuhr);
+                mAsrTV.setText(asr);
+                mSunsetTV.setText(sunset);
+                mMagribTV.setText(maghrib);
+                mIshaTV.setText(isha);
+                mMidnightTV.setText(midnight);
 
+                ShowCurrentPrayerTime(imsak, fajr, sunrise, dhuhr, asr, sunset, maghrib, isha, midnight);
+            } else {
+                if (prayer_timings_file_name.equals("By Device Location")) {
+                    String latitude = Tools.GetDataFromSharePrefarence(context, "latitude");
+                    String longitude = Tools.GetDataFromSharePrefarence(context, "longitude");
+                    prayer_timings_file_name = "latitude="+latitude+"&longitude="+longitude+"&method=2&month="+string_date[1]+"&year="+string_date[2];
+                    downloadData( "http://api.aladhan.com/v1/calendar?"+prayer_timings_file_name);
+                } else if (prayer_timings_file_name.equals("By City & Country")) {
+                    prayer_timings_file_name = "city="+location.split(",")[0]+"&country="+location.split(",")[1]+"&month="+string_date[1]+"&year="+string_date[2];
 
-                    ShowCurrentPrayerTime(imsak, fajr, sunrise, dhuhr, asr, sunset, maghrib, isha, midnight);
-                }else{
-                    downloadData(location);
-                    Tools.SaveDataToSharePrefarence(context, "location", location);
+                    downloadData("http://api.aladhan.com/v1/calendarByCity?"+prayer_timings_file_name);
                 }
-            } catch (Exception e) {
-                Toast.makeText(context, e.toString(), Toast.LENGTH_LONG).show();
             }
+        } catch (Exception e) {
+            Toast.makeText(context, e.toString(), Toast.LENGTH_LONG).show();
         }
 
         mLocationBtn.setOnClickListener(new View.OnClickListener() {
@@ -214,11 +226,54 @@ public class PrayersFragment extends Fragment {
             public void onClick(View v) {
                 final Dialog dialog = new Dialog(context);
                 dialog.setContentView(R.layout.select_prayer_location);
-                dialog.setTitle("Search For City");
+                dialog.setTitle("Get Prayer Timings");
                 dialog.show();
 
                 final EditText search_city = dialog.findViewById(R.id.prayer_location_search_id);
                 final ListView search_city_LV = dialog.findViewById(R.id.prayer_location_listView_id);
+
+                List<String> methods = new ArrayList<>(Arrays.asList("By Device Location", "By City & Country"));
+                ptAd = new ArrayAdapter<>(context, android.R.layout.simple_list_item_1, methods);
+                search_city_LV.setAdapter(ptAd);
+
+                search_city_LV.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                        String method = ptAd.getItem(position);
+                        assert method != null;
+                        if (method.equals("By Device Location")){
+                            String latitude = Tools.GetDataFromSharePrefarence(context, "latitude");
+                            String longitude = Tools.GetDataFromSharePrefarence(context, "longitude");
+                            prayer_timings_file_name = "latitude="+latitude+"&longitude="+longitude+"&method=2";
+                            downloadData( "http://api.aladhan.com/v1/timings/1398332113"+prayer_timings_file_name);
+                            location = "Device Location";
+                        } else if(method.equals("By City & Country")){
+                            final Dialog city_country_dlg = new Dialog(context);
+                            city_country_dlg.setContentView(R.layout.prayer_timings_by_city_country_layout);
+                            city_country_dlg.setTitle("City & Country");
+                            city_country_dlg.show();
+
+                            cityET = city_country_dlg.findViewById(R.id.city);
+                            countryET = city_country_dlg.findViewById(R.id.country);
+
+                            Button city_country_btn = city_country_dlg.findViewById(R.id.city_country_submit_btn);
+
+                            city_country_btn.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    String city = cityET.getText().toString();
+                                    String country = countryET.getText().toString();
+                                    prayer_timings_file_name = "city="+city+"&country="+country+"&method=2";
+
+                                    downloadData("http://api.aladhan.com/v1/timingsByCity?"+prayer_timings_file_name);
+                                    location = city+", "+country;
+                                    city_country_dlg.dismiss();
+                                }
+                            });
+                        }
+                        dialog.dismiss();
+                    }
+                });
 
                 search_city.addTextChangedListener(new TextWatcher() {
                     @Override
@@ -228,28 +283,7 @@ public class PrayersFragment extends Fragment {
 
                     @Override
                     public void onTextChanged(CharSequence s, int start, int before, int count) {
-                        List<World_Cities> world_cities = new ArrayList<>();
-                        world_cities.clear();
-                        world_cities = db.getSearchWorldLocationData(search_city.getText().toString());
-                        PrayerLocationAdapter adapter = new PrayerLocationAdapter(context, world_cities);
-                        search_city_LV.setAdapter(adapter);
-
-                        search_city_LV.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                            @Override
-                            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                                World_Cities world_city = (World_Cities) parent.getItemAtPosition(position);
-                                location = world_city.getCity() + "/" + world_city.getCountry();
-                                PrayerTimings prayerTimings = db.getPrayerTime(location,
-                                        today);
-
-                                if (prayerTimings.getId() == 0) {
-                                    downloadData(location);
-                                    Tools.SaveDataToSharePrefarence(context, "location", location);
-                                }
-
-                                dialog.cancel();
-                            }
-                        });
+                        ptAd.getFilter().filter(s);
                     }
 
                     @Override
@@ -258,14 +292,15 @@ public class PrayersFragment extends Fragment {
                     }
                 });
 
-                dialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
-                    @Override
-                    public void onCancel(DialogInterface dialog) {
-                        //do whatever you want the back key to do
-                        dialog.dismiss();
-                        onStart();
-                    }
-                });
+            }
+        });
+
+        mDateTV.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+               Intent calender_intent = new Intent(context, CalenderActivity.class);
+               startActivity(calender_intent);
+
             }
         });
     }
@@ -308,11 +343,8 @@ public class PrayersFragment extends Fragment {
             HttpURLConnection connection = null;
             OutputStream output;
             try {
-                String[] url_value = sUrl[0].split("/");
-
                 // execute this when the downloader must be fired
-                URL url = new URL("http://api.aladhan.com/v1/calendarByAddress?address=" + url_value[0] + "," + url_value[1] +
-                        "&method=2&month=" + string_date[1] + "&year=" + string_date[2]);
+                URL url = new URL(sUrl[0]);
                 connection = (HttpURLConnection) url.openConnection();
                 connection.connect();
                 // expect HTTP 200 OK, so we don't mistakenly save error report
@@ -328,11 +360,32 @@ public class PrayersFragment extends Fragment {
                 // download the file
                 input = connection.getInputStream();
                 InputStream in = new BufferedInputStream(input);
-                convertStreamToString(in, sUrl[0]);
-
                 output = new FileOutputStream(ReadAndWriteFiles.getAppExternalFilesDir(context) +
-                        "/Muslims/Prayer/" + url_value[0] + "_" +
-                        url_value[1] + "_" + string_date[1] + "_" + string_date[2]+".json");
+                        "/Muslims/Prayer/" + prayer_timings_file_name);
+
+                BufferedReader reader = new BufferedReader(new InputStreamReader(in));
+                StringBuilder sb = new StringBuilder();
+
+                String line;
+                while ((line = reader.readLine()) != null) {
+                    sb.append(line).append('\n');
+                }
+
+
+                String response = sb.toString();
+                JSONObject p_time = new JSONObject(response).getJSONObject("data").getJSONObject("timings");
+
+                Tools.SaveDataToSharePrefarence(context,"Imsak", p_time.getString("Imsak"));
+                Tools.SaveDataToSharePrefarence(context,"Fajr", p_time.getString("Fajr"));
+                Tools.SaveDataToSharePrefarence(context,"Sunrise", p_time.getString("Sunrise"));
+                Tools.SaveDataToSharePrefarence(context,"Dhuhr", p_time.getString("Dhuhr"));
+                Tools.SaveDataToSharePrefarence(context,"Asr", p_time.getString("Asr"));
+                Tools.SaveDataToSharePrefarence(context,"Sunset", p_time.getString("Sunset"));
+                Tools.SaveDataToSharePrefarence(context,"Maghrib", p_time.getString("Maghrib"));
+                Tools.SaveDataToSharePrefarence(context,"Isha", p_time.getString("Isha"));
+                Tools.SaveDataToSharePrefarence(context,"Midnight", p_time.getString("Midnight"));
+                Tools.SaveDataToSharePrefarence(context,"Date", today);
+
 
                 byte[] data = new byte[4096];
                 long total = 0;
@@ -384,11 +437,14 @@ public class PrayersFragment extends Fragment {
         protected void onPostExecute(String result) {
             mWakeLock.release();
             mProgressDialog.dismiss();
-            if (result != null)
+            if (result != null){
                 Toast.makeText(context, result, Toast.LENGTH_LONG).show();
+            }
             else{
                 Toast.makeText(context, "File downloaded", Toast.LENGTH_SHORT).show();
+                Tools.SaveDataToSharePrefarence(context,"Location", location);
             }
+            onStart();
         }
     }
 

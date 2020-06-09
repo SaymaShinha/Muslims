@@ -155,7 +155,7 @@ public class QuranFragment extends Fragment {
         LinearLayout last_recite_linearLayout = mMainView.findViewById(R.id.quran_recite_last_position_LinearLayout_id);
         TextView textView = mMainView.findViewById(R.id.quran_recite_last_position_tv_id);
 
-        String tv_last_reciting_surah = last_recite_surah_name + " ( " + ayah_last_position + " ) ";
+        String tv_last_reciting_surah = last_recite_surah_name + " ( " + String.valueOf(Integer.valueOf(ayah_last_position)+1) + " ) ";
         textView.setText(tv_last_reciting_surah);
 
 
@@ -183,201 +183,211 @@ public class QuranFragment extends Fragment {
 
         selectedSort = Tools.GetDataFromSharePrefarence(mMainView.getContext(), "quran_sort_type");
 
-        if (selectedSort.equals("") || selectedSort.equals("Traditional Order")) {
-            surahs = db.getAllSurah();
-            surahAdapter = new SurahAdapter(mMainView.getContext(), surahs);
-            mRecyclerView.setAdapter(surahAdapter);
+        switch (selectedSort) {
+            case "":
+            case "Traditional Order":
+                surahs = db.getAllSurah();
+                surahAdapter = new SurahAdapter(mMainView.getContext(), surahs);
+                mRecyclerView.setAdapter(surahAdapter);
 
-            search_quran_ET.addTextChangedListener(new TextWatcher() {
-                @Override
-                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                search_quran_ET.addTextChangedListener(new TextWatcher() {
+                    @Override
+                    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
-                }
+                    }
 
-                @Override
-                public void onTextChanged(CharSequence s, int start, int before, int count) {
-                    surahs.clear();
-                    surahs = db.getSearchSurah(search_quran_ET.getText().toString());
-                    SurahAdapter surahAdapter = new SurahAdapter(mMainView.getContext(), surahs);
-                    mRecyclerView.setAdapter(surahAdapter);
-                }
+                    @Override
+                    public void onTextChanged(CharSequence s, int start, int before, int count) {
+                        surahs.clear();
+                        surahs = db.getSearchSurah(search_quran_ET.getText().toString());
+                        SurahAdapter surahAdapter = new SurahAdapter(mMainView.getContext(), surahs);
+                        mRecyclerView.setAdapter(surahAdapter);
+                    }
 
-                @Override
-                public void afterTextChanged(Editable s) {
+                    @Override
+                    public void afterTextChanged(Editable s) {
 
-                }
-            });
-        } else if (selectedSort.equals("Desc Surah Name")) {
-            surahs = db.getAllSurahDescSurahName();
-            surahAdapter = new SurahAdapter(mMainView.getContext(), surahs);
-            mRecyclerView.setAdapter(surahAdapter);
+                    }
+                });
+                break;
+            case "Desc Surah Name":
+                surahs = db.getAllSurahDescSurahName();
+                surahAdapter = new SurahAdapter(mMainView.getContext(), surahs);
+                mRecyclerView.setAdapter(surahAdapter);
 
-            search_quran_ET.addTextChangedListener(new TextWatcher() {
-                @Override
-                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                search_quran_ET.addTextChangedListener(new TextWatcher() {
+                    @Override
+                    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
-                }
+                    }
 
-                @Override
-                public void onTextChanged(CharSequence s, int start, int before, int count) {
-                    surahs.clear();
-                    surahs = db.getSearchSurah(search_quran_ET.getText().toString());
-                    SurahAdapter surahAdapter = new SurahAdapter(mMainView.getContext(), surahs);
-                    mRecyclerView.setAdapter(surahAdapter);
-                }
+                    @Override
+                    public void onTextChanged(CharSequence s, int start, int before, int count) {
+                        surahs.clear();
+                        surahs = db.getSearchSurah(search_quran_ET.getText().toString());
+                        SurahAdapter surahAdapter = new SurahAdapter(mMainView.getContext(), surahs);
+                        mRecyclerView.setAdapter(surahAdapter);
+                    }
 
-                @Override
-                public void afterTextChanged(Editable s) {
+                    @Override
+                    public void afterTextChanged(Editable s) {
 
-                }
-            });
-        } else if (selectedSort.equals("Asc Surah Name")) {
-            surahs = db.getAllSurahAscSurahName();
-            surahAdapter = new SurahAdapter(mMainView.getContext(), surahs);
-            mRecyclerView.setAdapter(surahAdapter);
+                    }
+                });
+                break;
+            case "Asc Surah Name":
+                surahs = db.getAllSurahAscSurahName();
+                surahAdapter = new SurahAdapter(mMainView.getContext(), surahs);
+                mRecyclerView.setAdapter(surahAdapter);
 
-            search_quran_ET.addTextChangedListener(new TextWatcher() {
-                @Override
-                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                search_quran_ET.addTextChangedListener(new TextWatcher() {
+                    @Override
+                    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
-                }
+                    }
 
-                @Override
-                public void onTextChanged(CharSequence s, int start, int before, int count) {
-                    surahs.clear();
-                    surahs = db.getSearchSurah(search_quran_ET.getText().toString());
-                    SurahAdapter surahAdapter = new SurahAdapter(mMainView.getContext(), surahs);
-                    mRecyclerView.setAdapter(surahAdapter);
-                }
+                    @Override
+                    public void onTextChanged(CharSequence s, int start, int before, int count) {
+                        surahs.clear();
+                        surahs = db.getSearchSurah(search_quran_ET.getText().toString());
+                        SurahAdapter surahAdapter = new SurahAdapter(mMainView.getContext(), surahs);
+                        mRecyclerView.setAdapter(surahAdapter);
+                    }
 
-                @Override
-                public void afterTextChanged(Editable s) {
+                    @Override
+                    public void afterTextChanged(Editable s) {
 
-                }
-            });
-        } else if (selectedSort.equals("Meccan Surah")) {
-            surahs = db.getAllMeccanSurah();
-            surahAdapter = new SurahAdapter(mMainView.getContext(), surahs);
-            mRecyclerView.setAdapter(surahAdapter);
+                    }
+                });
+                break;
+            case "Meccan Surah":
+                surahs = db.getAllMeccanSurah();
+                surahAdapter = new SurahAdapter(mMainView.getContext(), surahs);
+                mRecyclerView.setAdapter(surahAdapter);
 
-            search_quran_ET.addTextChangedListener(new TextWatcher() {
-                @Override
-                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                search_quran_ET.addTextChangedListener(new TextWatcher() {
+                    @Override
+                    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
-                }
+                    }
 
-                @Override
-                public void onTextChanged(CharSequence s, int start, int before, int count) {
-                    surahs.clear();
-                    surahs = db.getSearchSurah(search_quran_ET.getText().toString());
-                    SurahAdapter surahAdapter = new SurahAdapter(mMainView.getContext(), surahs);
-                    mRecyclerView.setAdapter(surahAdapter);
-                }
+                    @Override
+                    public void onTextChanged(CharSequence s, int start, int before, int count) {
+                        surahs.clear();
+                        surahs = db.getSearchSurah(search_quran_ET.getText().toString());
+                        SurahAdapter surahAdapter = new SurahAdapter(mMainView.getContext(), surahs);
+                        mRecyclerView.setAdapter(surahAdapter);
+                    }
 
-                @Override
-                public void afterTextChanged(Editable s) {
+                    @Override
+                    public void afterTextChanged(Editable s) {
 
-                }
-            });
-        } else if (selectedSort.equals("Medinan Surah")) {
-            surahs = db.getAllMedinanSurah();
-            surahAdapter = new SurahAdapter(mMainView.getContext(), surahs);
-            mRecyclerView.setAdapter(surahAdapter);
+                    }
+                });
+                break;
+            case "Medinan Surah":
+                surahs = db.getAllMedinanSurah();
+                surahAdapter = new SurahAdapter(mMainView.getContext(), surahs);
+                mRecyclerView.setAdapter(surahAdapter);
 
-            search_quran_ET.addTextChangedListener(new TextWatcher() {
-                @Override
-                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                search_quran_ET.addTextChangedListener(new TextWatcher() {
+                    @Override
+                    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
-                }
+                    }
 
-                @Override
-                public void onTextChanged(CharSequence s, int start, int before, int count) {
-                    surahs.clear();
-                    surahs = db.getSearchSurah(search_quran_ET.getText().toString());
-                    SurahAdapter surahAdapter = new SurahAdapter(mMainView.getContext(), surahs);
-                    mRecyclerView.setAdapter(surahAdapter);
-                }
+                    @Override
+                    public void onTextChanged(CharSequence s, int start, int before, int count) {
+                        surahs.clear();
+                        surahs = db.getSearchSurah(search_quran_ET.getText().toString());
+                        SurahAdapter surahAdapter = new SurahAdapter(mMainView.getContext(), surahs);
+                        mRecyclerView.setAdapter(surahAdapter);
+                    }
 
-                @Override
-                public void afterTextChanged(Editable s) {
+                    @Override
+                    public void afterTextChanged(Editable s) {
 
-                }
-            });
-        } else if (selectedSort.equals("Desc Surah Total Ayah")) {
-            surahs = db.getAllSurahOrderByTotalAyahDesc();
-            surahAdapter = new SurahAdapter(mMainView.getContext(), surahs);
-            mRecyclerView.setAdapter(surahAdapter);
+                    }
+                });
+                break;
+            case "Desc Surah Total Ayah":
+                surahs = db.getAllSurahOrderByTotalAyahDesc();
+                surahAdapter = new SurahAdapter(mMainView.getContext(), surahs);
+                mRecyclerView.setAdapter(surahAdapter);
 
-            search_quran_ET.addTextChangedListener(new TextWatcher() {
-                @Override
-                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                search_quran_ET.addTextChangedListener(new TextWatcher() {
+                    @Override
+                    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
-                }
+                    }
 
-                @Override
-                public void onTextChanged(CharSequence s, int start, int before, int count) {
-                    surahs.clear();
-                    surahs = db.getSearchSurah(search_quran_ET.getText().toString());
-                    SurahAdapter surahAdapter = new SurahAdapter(mMainView.getContext(), surahs);
-                    mRecyclerView.setAdapter(surahAdapter);
-                }
+                    @Override
+                    public void onTextChanged(CharSequence s, int start, int before, int count) {
+                        surahs.clear();
+                        surahs = db.getSearchSurah(search_quran_ET.getText().toString());
+                        SurahAdapter surahAdapter = new SurahAdapter(mMainView.getContext(), surahs);
+                        mRecyclerView.setAdapter(surahAdapter);
+                    }
 
-                @Override
-                public void afterTextChanged(Editable s) {
+                    @Override
+                    public void afterTextChanged(Editable s) {
 
-                }
-            });
-        } else if (selectedSort.equals("Asc Surah Total Ayah")) {
-            surahs = db.getAllSurahOrderByTotalAyahAsc();
-            surahAdapter = new SurahAdapter(mMainView.getContext(), surahs);
-            mRecyclerView.setAdapter(surahAdapter);
+                    }
+                });
+                break;
+            case "Asc Surah Total Ayah":
+                surahs = db.getAllSurahOrderByTotalAyahAsc();
+                surahAdapter = new SurahAdapter(mMainView.getContext(), surahs);
+                mRecyclerView.setAdapter(surahAdapter);
 
-            search_quran_ET.addTextChangedListener(new TextWatcher() {
-                @Override
-                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                search_quran_ET.addTextChangedListener(new TextWatcher() {
+                    @Override
+                    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
-                }
+                    }
 
-                @Override
-                public void onTextChanged(CharSequence s, int start, int before, int count) {
-                    surahs.clear();
-                    surahs = db.getSearchSurah(search_quran_ET.getText().toString());
-                    SurahAdapter surahAdapter = new SurahAdapter(mMainView.getContext(), surahs);
-                    mRecyclerView.setAdapter(surahAdapter);
-                }
+                    @Override
+                    public void onTextChanged(CharSequence s, int start, int before, int count) {
+                        surahs.clear();
+                        surahs = db.getSearchSurah(search_quran_ET.getText().toString());
+                        SurahAdapter surahAdapter = new SurahAdapter(mMainView.getContext(), surahs);
+                        mRecyclerView.setAdapter(surahAdapter);
+                    }
 
-                @Override
-                public void afterTextChanged(Editable s) {
+                    @Override
+                    public void afterTextChanged(Editable s) {
 
-                }
-            });
-        } else if (selectedSort.equals("According To Revelation")) {
-            revSurahs = db.getAllRevSurah();
-            final RevSurahAdapter revSurahAdapter = new RevSurahAdapter(mMainView.getContext(), revSurahs);
-            mRecyclerView.setAdapter(revSurahAdapter);
+                    }
+                });
+                break;
+            case "According To Revelation":
+                revSurahs = db.getAllRevSurah();
+                final RevSurahAdapter revSurahAdapter = new RevSurahAdapter(mMainView.getContext(), revSurahs);
+                mRecyclerView.setAdapter(revSurahAdapter);
 
-            search_quran_ET.addTextChangedListener(new TextWatcher() {
-                @Override
-                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                search_quran_ET.addTextChangedListener(new TextWatcher() {
+                    @Override
+                    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
-                }
+                    }
 
-                @Override
-                public void onTextChanged(CharSequence s, int start, int before, int count) {
-                    revSurahs.clear();
-                    revSurahs = db.getSearchRevSurah(search_quran_ET.getText().toString());
-                    RevSurahAdapter revSurahAdapter = new RevSurahAdapter(mMainView.getContext(), revSurahs);
-                    mRecyclerView.setAdapter(revSurahAdapter);
-                }
+                    @Override
+                    public void onTextChanged(CharSequence s, int start, int before, int count) {
+                        revSurahs.clear();
+                        revSurahs = db.getSearchRevSurah(search_quran_ET.getText().toString());
+                        RevSurahAdapter revSurahAdapter = new RevSurahAdapter(mMainView.getContext(), revSurahs);
+                        mRecyclerView.setAdapter(revSurahAdapter);
+                    }
 
-                @Override
-                public void afterTextChanged(Editable s) {
+                    @Override
+                    public void afterTextChanged(Editable s) {
 
-                }
-            });
+                    }
+                });
+                break;
         }
 
-        quran_sort_btn = (Button) mMainView.findViewById(R.id.quran_sort_btn_id);
+        quran_sort_btn = mMainView.findViewById(R.id.quran_sort_btn_id);
 
         quran_sort_btn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -392,15 +402,15 @@ public class QuranFragment extends Fragment {
 
                 Objects.requireNonNull(dialog.getWindow()).setLayout(width, height);
 
-                sortLV = (ListView) dialog.findViewById(R.id.sort_listview_id);
+                sortLV = dialog.findViewById(R.id.sort_listview_id);
 
                 String[] home_string = new String[]{"Traditional Order", "According To Revelation", "Desc Surah Name",
                         "Asc Surah Name", "Desc Surah Total Ayah", "Asc Surah Total Ayah", "Meccan Surah", "Medinan Surah"};
-                List<String> home_string_list = new ArrayList<String>(Arrays.asList(home_string));
-                sortAdapter = new ArrayAdapter<String>(mMainView.getContext(), android.R.layout.simple_list_item_1, home_string_list);
+                List<String> home_string_list = new ArrayList<>(Arrays.asList(home_string));
+                sortAdapter = new ArrayAdapter<>(mMainView.getContext(), android.R.layout.simple_list_item_1, home_string_list);
                 sortLV.setAdapter(sortAdapter);
 
-                search_sort_ET = (EditText) dialog.findViewById(R.id.search_sort_id);
+                search_sort_ET = dialog.findViewById(R.id.search_sort_id);
 
                 search_sort_ET.addTextChangedListener(new TextWatcher() {
                     @Override
@@ -421,7 +431,7 @@ public class QuranFragment extends Fragment {
                 sortLV.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                        selectedSort = sortAdapter.getItem(position).toString();
+                        selectedSort = sortAdapter.getItem(position);
                         Tools.SaveDataToSharePrefarence(mMainView.getContext(), "quran_sort_type", selectedSort);
                         dialog.cancel();
                     }

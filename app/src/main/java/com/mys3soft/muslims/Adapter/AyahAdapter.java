@@ -1,12 +1,16 @@
 package com.mys3soft.muslims.Adapter;
 
+import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TableLayout;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.recyclerview.widget.RecyclerView;
 import com.mys3soft.muslims.Models.Ayah;
 import com.mys3soft.muslims.R;
@@ -90,6 +94,7 @@ public class AyahAdapter extends RecyclerView.Adapter<AyahAdapter.ViewHolder> {
 
     class ViewHolder extends RecyclerView.ViewHolder {
         private TextView mAyahTV, mEnTransAyah, mAyahTrasTV_1;
+        private TableLayout mTableLayout;
 
         ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -98,6 +103,8 @@ public class AyahAdapter extends RecyclerView.Adapter<AyahAdapter.ViewHolder> {
             mAyahTrasTV_1 = itemView.findViewById(R.id.ayah_translation_1_id);
             mAyahTrasTV_1.setTextAlignment(textAling);
             mAyahTrasTV_1.setTextDirection(textDir);
+
+            mTableLayout = itemView.findViewById(R.id.single_ayah_table_layout);
         }
     }
 }

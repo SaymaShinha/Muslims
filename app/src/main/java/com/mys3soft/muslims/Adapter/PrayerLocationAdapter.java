@@ -1,6 +1,7 @@
 package com.mys3soft.muslims.Adapter;
 
 import android.content.Context;
+import android.text.Layout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,7 +30,8 @@ public class PrayerLocationAdapter extends ArrayAdapter<World_Cities> {
 
         World_Cities world_location = getItem(position);
 
-        TextView location = (TextView) convertView.findViewById(R.id.single_location_text_id);
+        TextView location = convertView.findViewById(R.id.single_location_text_id);
+        assert world_location != null;
         String s = world_location.getCity()+"."+world_location.getCountry();
         location.setText(s);
 

@@ -1172,6 +1172,14 @@ public class DBHelper extends SQLiteOpenHelper {
         db.close();
         return dayList;
     }
+
+    public void deleteCalender(int gre_month, int gre_day) {
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        db.delete(CALENDER_TABLE, CALENDER_COLUMN__GREGORIAN__MONTH_NUMBER +" < "+ gre_month, null);
+        db.close();
+    }
+
     //endregion:Calender
 
 }

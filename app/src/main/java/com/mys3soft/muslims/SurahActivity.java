@@ -49,7 +49,6 @@ public class SurahActivity extends AppCompatActivity {
     private String toggle_en_trans;
     private String arabic_lang;
     private int ayah_position_num;
-    private int selected_ayah_number;
 
 
     @Override
@@ -94,444 +93,441 @@ public class SurahActivity extends AppCompatActivity {
         en_trans.clear();
         trans_ayahs.clear();
 
-        if (model.equals("whole_surah")) {
-            if (!arabic_lang.equals("Disable")) {
-                ayahs = db.getAllQuranAyah("Ar_Uthamani", surah_number);
-            }
-
-            if (!toggle_en_trans.equals("Disable")) {
-                en_trans = db.getAllQuranAyah("English_Transliteration", surah_number);
-            }
-
-            List<Language> selected_trans = db.getSelectedLanguage();
-            if (selected_trans.size() != 0) {
-                for (Language language : selected_trans) {
-                    trans_ayahs = db.getAllQuranAyah(language.getLanguage(), surah_number);
-                }
-            }
-
-            if (arabic_lang.equals("Disable") && toggle_en_trans.equals("Disable") && selected_trans.size() == 0) {
-                Tools.SaveDataToSharePrefarence(SurahActivity.this, "Arabic_Lang", "Ar_Uthamani");
-                ayahs = db.getAllQuranAyah("Ar_Uthamani", surah_number);
-            }
-
-            ayahAdapter = new AyahAdapter(this, ayahs, en_trans, trans_ayahs, total_ayah);
-            mAyahRecyclerView.setAdapter(ayahAdapter);
-
-            ayah_number_TV.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    final Dialog dialog = new Dialog(SurahActivity.this);
-                    dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-                    dialog.setContentView(R.layout.ayah_number_layout);
-                    dialog.show();
-
-                    int width = (int) (getResources().getDisplayMetrics().widthPixels * 0.30);
-                    int height = WindowManager.LayoutParams.WRAP_CONTENT;
-
-                    Objects.requireNonNull(dialog.getWindow()).setLayout(width, height);
-
-                    ayah_number_LV = dialog.findViewById(R.id.ayah_number_listview_id);
-                    final List<Integer> ayah_number = new ArrayList<>();
-                    int i = 1;
-                    while (i <= total_ayah) {
-                        ayah_number.add(i);
-                        i++;
-                    }
-                    ayah_number_adapter = new ArrayAdapter<>(dialog.getContext(), R.layout.single_ayah_number, ayah_number);
-                    ayah_number_LV.setAdapter(ayah_number_adapter);
-
-                    search_ayah_number_ET = dialog.findViewById(R.id.search_ayah_number_id);
-
-                    search_ayah_number_ET.addTextChangedListener(new TextWatcher() {
-                        @Override
-                        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-                        }
-
-                        @Override
-                        public void onTextChanged(CharSequence s, int start, int before, int count) {
-                        }
-
-                        @Override
-                        public void afterTextChanged(Editable s) {
-                            SurahActivity.this.ayah_number_adapter.getFilter().filter(s);
-                        }
-                    });
-
-                    ayah_number_LV.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                        @Override
-                        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                            // go to ayah
-                            selected_ayah_number = Integer.valueOf(parent.getItemAtPosition(position).toString());
-                            mAyahRecyclerView.scrollToPosition(selected_ayah_number);
-                            Tools.SaveDataToSharePrefarence(SurahActivity.this, "ayah_last_position", String.valueOf(selected_ayah_number));
-                            dialog.dismiss();
-                        }
-                    });
-                }
-            });
-
-            mAyahRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
-                @Override
-                public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
-                    super.onScrollStateChanged(recyclerView, newState);
-                    if (newState == RecyclerView.SCROLL_STATE_IDLE) {
-                        ayah_position_num = Tools.getCurrentItem(mAyahRecyclerView);
-                        Tools.SaveDataToSharePrefarence(SurahActivity.this, "last_recite_surah_name", surah_name);
-                        Tools.SaveDataToSharePrefarence(SurahActivity.this, "last_recite_surah_total_ayah", String.valueOf(total_ayah));
-                        Tools.SaveDataToSharePrefarence(SurahActivity.this, "last_recite_surah_number", String.valueOf(surah_number));
-                        if (ayah_position_num == 0) {
-                            Tools.SaveDataToSharePrefarence(SurahActivity.this, "ayah_last_position", String.valueOf(1));
-                        } else {
-                            Tools.SaveDataToSharePrefarence(SurahActivity.this, "ayah_last_position", String.valueOf(ayah_position_num));
-                        }
-                    }
-                }
-            });
-        } else if (model.equals("last_surah")) {
-            String ayah_last_position = Tools.GetDataFromSharePrefarence(SurahActivity.this, "ayah_last_position");
-
-            if (!ayah_last_position.equals("")) {
-                ayah_position_num = Integer.valueOf(ayah_last_position);
-            }
-            mAyahRecyclerView.scrollToPosition(ayah_position_num - 1);
-
-            if (!arabic_lang.equals("Disable")) {
-                if (!arabic_lang.equals("")) {
-                    ayahs = db.getAllQuranAyah(arabic_lang, surah_number);
-                } else {
+        switch (model) {
+            case "whole_surah": {
+                if (!arabic_lang.equals("Disable")) {
                     ayahs = db.getAllQuranAyah("Ar_Uthamani", surah_number);
                 }
-            }
 
-            if (!toggle_en_trans.equals("Disable")) {
-                en_trans = db.getAllQuranAyah("English_Transliteration", surah_number);
-            }
-
-            List<Language> selected_trans = db.getSelectedLanguage();
-            if (selected_trans.size() != 0) {
-                for (Language language : selected_trans) {
-                    trans_ayahs = db.getAllQuranAyah(language.getLanguage(), surah_number);
+                if (!toggle_en_trans.equals("Disable")) {
+                    en_trans = db.getAllQuranAyah("English_Transliteration", surah_number);
                 }
-            }
 
-            if (arabic_lang.equals("Disable") && toggle_en_trans.equals("Disable") && selected_trans.size() == 0) {
-                Tools.SaveDataToSharePrefarence(SurahActivity.this, "Arabic_Lang", "Ar_Uthamani");
-                ayahs = db.getAllQuranAyah("Ar_Uthamani", surah_number);
-            }
-
-            ayahAdapter = new AyahAdapter(this, ayahs, en_trans, trans_ayahs, total_ayah);
-            mAyahRecyclerView.setAdapter(ayahAdapter);
-
-            ayah_number_TV.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    final Dialog dialog = new Dialog(SurahActivity.this);
-                    dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-                    dialog.setContentView(R.layout.ayah_number_layout);
-                    dialog.show();
-
-                    int width = (int) (getResources().getDisplayMetrics().widthPixels * 0.30);
-                    int height = WindowManager.LayoutParams.WRAP_CONTENT;
-
-                    Objects.requireNonNull(dialog.getWindow()).setLayout(width, height);
-
-                    ayah_number_LV = dialog.findViewById(R.id.ayah_number_listview_id);
-                    List<Integer> ayah_number = new ArrayList<>();
-                    int i = 1;
-                    while (i <= total_ayah) {
-                        ayah_number.add(i);
-                        i++;
-                    }
-                    ayah_number_adapter = new ArrayAdapter<>(dialog.getContext(), R.layout.single_ayah_number, ayah_number);
-                    ayah_number_LV.setAdapter(ayah_number_adapter);
-
-                    search_ayah_number_ET = dialog.findViewById(R.id.search_ayah_number_id);
-
-                    search_ayah_number_ET.addTextChangedListener(new TextWatcher() {
-                        @Override
-                        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-                        }
-
-                        @Override
-                        public void onTextChanged(CharSequence s, int start, int before, int count) {
-                            SurahActivity.this.ayah_number_adapter.getFilter().filter(s);
-                        }
-
-                        @Override
-                        public void afterTextChanged(Editable s) {
-
-                        }
-                    });
-
-                    ayah_number_LV.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                        @Override
-                        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                            // go to ayah
-                            selected_ayah_number = Integer.valueOf(parent.getItemAtPosition(position).toString());
-                            mAyahRecyclerView.scrollToPosition(selected_ayah_number);
-                            Tools.SaveDataToSharePrefarence(SurahActivity.this, "ayah_last_position", String.valueOf(selected_ayah_number));
-                            dialog.dismiss();
-                        }
-                    });
-                }
-            });
-
-            mAyahRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
-                @Override
-                public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
-                    super.onScrollStateChanged(recyclerView, newState);
-                    if (newState == RecyclerView.SCROLL_STATE_IDLE) {
-                        ayah_position_num = Tools.getCurrentItem(mAyahRecyclerView);
-                        Tools.SaveDataToSharePrefarence(SurahActivity.this, "last_recite_surah_name", surah_name);
-                        Tools.SaveDataToSharePrefarence(SurahActivity.this, "last_recite_surah_total_ayah", String.valueOf(total_ayah));
-                        Tools.SaveDataToSharePrefarence(SurahActivity.this, "last_recite_surah_number", String.valueOf(surah_number));
-                        if (ayah_position_num == 0) {
-                            Tools.SaveDataToSharePrefarence(SurahActivity.this, "ayah_last_position", String.valueOf(1));
-                        } else {
-                            Tools.SaveDataToSharePrefarence(SurahActivity.this, "ayah_last_position", String.valueOf(ayah_position_num));
-                        }
+                List<Language> selected_trans = db.getSelectedLanguage();
+                if (selected_trans.size() != 0) {
+                    for (Language language : selected_trans) {
+                        trans_ayahs = db.getAllQuranAyah(language.getLanguage(), surah_number);
                     }
                 }
-            });
-        } else if (model.equals("ayah_ul_kursi")) {
-            if (!arabic_lang.equals("Disable")) {
-                ayahs = db.getAyahUlKursi(arabic_lang);
-            }
 
-            if (!toggle_en_trans.equals("Disable")) {
-                en_trans = db.getAyahUlKursi("English_Transliteration");
-            }
-
-            List<Language> selected_trans = db.getSelectedLanguage();
-            if (selected_trans.size() != 0) {
-                for (Language language : selected_trans) {
-                    trans_ayahs = db.getAyahUlKursi(language.getLanguage());
+                if (arabic_lang.equals("Disable") && toggle_en_trans.equals("Disable") && selected_trans.size() == 0) {
+                    Tools.SaveDataToSharePrefarence(SurahActivity.this, "Arabic_Lang", "Ar_Uthamani");
+                    ayahs = db.getAllQuranAyah("Ar_Uthamani", surah_number);
                 }
-            }
 
-            if (arabic_lang.equals("Disable") && toggle_en_trans.equals("Disable") && selected_trans.size() == 0) {
-                Tools.SaveDataToSharePrefarence(SurahActivity.this, "Arabic_Lang", "Ar_Uthamani");
-                ayahs = db.getAyahUlKursi("Ar_Uthamani");
-            }
+                ayahAdapter = new AyahAdapter(this, ayahs, en_trans, trans_ayahs, total_ayah);
+                mAyahRecyclerView.setAdapter(ayahAdapter);
 
-            ayahAdapter = new AyahAdapter(this, ayahs, en_trans, trans_ayahs, total_ayah);
-            mAyahRecyclerView.setAdapter(ayahAdapter);
+                ayah_number_TV.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        final Dialog dialog = new Dialog(SurahActivity.this);
+                        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                        dialog.setContentView(R.layout.ayah_number_layout);
+                        dialog.show();
 
-            ayah_number_TV.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    final Dialog dialog = new Dialog(SurahActivity.this);
-                    dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-                    dialog.setContentView(R.layout.ayah_number_layout);
-                    dialog.show();
+                        int width = (int) (getResources().getDisplayMetrics().widthPixels * 0.30);
+                        int height = WindowManager.LayoutParams.WRAP_CONTENT;
 
-                    int width = (int) (getResources().getDisplayMetrics().widthPixels * 0.30);
-                    int height = WindowManager.LayoutParams.WRAP_CONTENT;
+                        Objects.requireNonNull(dialog.getWindow()).setLayout(width, height);
 
-                    Objects.requireNonNull(dialog.getWindow()).setLayout(width, height);
+                        ayah_number_LV = dialog.findViewById(R.id.ayah_number_listview_id);
+                        final List<Integer> ayah_number = new ArrayList<>();
+                        int i = 1;
+                        while (i <= total_ayah) {
+                            ayah_number.add(i);
+                            i++;
+                        }
+                        ayah_number_adapter = new ArrayAdapter<>(dialog.getContext(), R.layout.single_ayah_number, ayah_number);
+                        ayah_number_LV.setAdapter(ayah_number_adapter);
 
-                    ayah_number_LV = dialog.findViewById(R.id.ayah_number_listview_id);
-                    List<Integer> ayah_number = new ArrayList<>();
-                    int i = 1;
-                    while (i <= total_ayah) {
-                        ayah_number.add(i);
-                        i++;
+                        search_ayah_number_ET = dialog.findViewById(R.id.search_ayah_number_id);
+
+                        search_ayah_number_ET.addTextChangedListener(new TextWatcher() {
+                            @Override
+                            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+                            }
+
+                            @Override
+                            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                            }
+
+                            @Override
+                            public void afterTextChanged(Editable s) {
+                                SurahActivity.this.ayah_number_adapter.getFilter().filter(s);
+                            }
+                        });
+
+                        ayah_number_LV.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                            @Override
+                            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                                // go to ayah
+                                mAyahRecyclerView.scrollToPosition(position);
+                                Tools.SaveDataToSharePrefarence(SurahActivity.this, "ayah_last_position", String.valueOf(position));
+                                dialog.dismiss();
+                            }
+                        });
                     }
-                    ayah_number_adapter = new ArrayAdapter<>(dialog.getContext(), R.layout.single_ayah_number, ayah_number);
-                    ayah_number_LV.setAdapter(ayah_number_adapter);
+                });
 
-                    search_ayah_number_ET = dialog.findViewById(R.id.search_ayah_number_id);
-
-                    search_ayah_number_ET.addTextChangedListener(new TextWatcher() {
-                        @Override
-                        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
+                mAyahRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+                    @Override
+                    public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
+                        super.onScrollStateChanged(recyclerView, newState);
+                        if (newState == RecyclerView.SCROLL_STATE_IDLE) {
+                            ayah_position_num = Tools.getCurrentItem(mAyahRecyclerView);
+                            Tools.SaveDataToSharePrefarence(SurahActivity.this, "last_recite_surah_name", surah_name);
+                            Tools.SaveDataToSharePrefarence(SurahActivity.this, "last_recite_surah_total_ayah", String.valueOf(total_ayah));
+                            Tools.SaveDataToSharePrefarence(SurahActivity.this, "last_recite_surah_number", String.valueOf(surah_number));
+                            if (ayah_position_num == 0) {
+                                Tools.SaveDataToSharePrefarence(SurahActivity.this, "ayah_last_position", String.valueOf(1));
+                            } else {
+                                Tools.SaveDataToSharePrefarence(SurahActivity.this, "ayah_last_position", String.valueOf(ayah_position_num));
+                            }
                         }
+                    }
+                });
+                break;
+            }
+            case "last_surah": {
+                String ayah_last_position = Tools.GetDataFromSharePrefarence(SurahActivity.this, "ayah_last_position");
 
-                        @Override
-                        public void onTextChanged(CharSequence s, int start, int before, int count) {
-                            SurahActivity.this.ayah_number_adapter.getFilter().filter(s);
-                        }
-
-                        @Override
-                        public void afterTextChanged(Editable s) {
-
-                        }
-                    });
-
-                    ayah_number_LV.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                        @Override
-                        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                            // go to ayah
-                            ayahlayoutManager.scrollToPosition(position);
-                            dialog.dismiss();
-                        }
-                    });
+                if (!ayah_last_position.equals("")) {
+                    ayah_position_num = Integer.valueOf(ayah_last_position);
                 }
-            });
-        } else if (model.equals("al_baqara_285_286_ayah")) {
-            if (!arabic_lang.equals("Disable")) {
-                if (!arabic_lang.equals("")) {
-                    ayahs = db.getAlBaqara285_286Ayah(arabic_lang);
-                } else {
+                mAyahRecyclerView.scrollToPosition(ayah_position_num);
+
+                if (!arabic_lang.equals("Disable")) {
+                    ayahs = db.getAllQuranAyah("Ar_Uthamani", surah_number);
+                }
+
+                if (!toggle_en_trans.equals("Disable")) {
+                    en_trans = db.getAllQuranAyah("English_Transliteration", surah_number);
+                }
+
+                List<Language> selected_trans = db.getSelectedLanguage();
+                if (selected_trans.size() != 0) {
+                    for (Language language : selected_trans) {
+                        trans_ayahs = db.getAllQuranAyah(language.getLanguage(), surah_number);
+                    }
+                }
+
+                if (arabic_lang.equals("Disable") && toggle_en_trans.equals("Disable") && selected_trans.size() == 0) {
+                    Tools.SaveDataToSharePrefarence(SurahActivity.this, "Arabic_Lang", "Ar_Uthamani");
+                    ayahs = db.getAllQuranAyah("Ar_Uthamani", surah_number);
+                }
+
+                ayahAdapter = new AyahAdapter(this, ayahs, en_trans, trans_ayahs, total_ayah);
+                mAyahRecyclerView.setAdapter(ayahAdapter);
+
+                ayah_number_TV.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        final Dialog dialog = new Dialog(SurahActivity.this);
+                        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                        dialog.setContentView(R.layout.ayah_number_layout);
+                        dialog.show();
+
+                        int width = (int) (getResources().getDisplayMetrics().widthPixels * 0.30);
+                        int height = WindowManager.LayoutParams.WRAP_CONTENT;
+
+                        Objects.requireNonNull(dialog.getWindow()).setLayout(width, height);
+
+                        ayah_number_LV = dialog.findViewById(R.id.ayah_number_listview_id);
+                        List<Integer> ayah_number = new ArrayList<>();
+                        int i = 1;
+                        while (i <= total_ayah) {
+                            ayah_number.add(i);
+                            i++;
+                        }
+                        ayah_number_adapter = new ArrayAdapter<>(dialog.getContext(), R.layout.single_ayah_number, ayah_number);
+                        ayah_number_LV.setAdapter(ayah_number_adapter);
+
+                        search_ayah_number_ET = dialog.findViewById(R.id.search_ayah_number_id);
+
+                        search_ayah_number_ET.addTextChangedListener(new TextWatcher() {
+                            @Override
+                            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+                            }
+
+                            @Override
+                            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                                SurahActivity.this.ayah_number_adapter.getFilter().filter(s);
+                            }
+
+                            @Override
+                            public void afterTextChanged(Editable s) {
+
+                            }
+                        });
+
+                        ayah_number_LV.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                            @Override
+                            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                                // go to ayah
+                                mAyahRecyclerView.scrollToPosition(position);
+                                Tools.SaveDataToSharePrefarence(SurahActivity.this, "ayah_last_position", String.valueOf(position));
+                                dialog.dismiss();
+                            }
+                        });
+                    }
+                });
+
+                mAyahRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+                    @Override
+                    public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
+                        super.onScrollStateChanged(recyclerView, newState);
+                        if (newState == RecyclerView.SCROLL_STATE_IDLE) {
+                            ayah_position_num = Tools.getCurrentItem(mAyahRecyclerView);
+                            Tools.SaveDataToSharePrefarence(SurahActivity.this, "last_recite_surah_name", surah_name);
+                            Tools.SaveDataToSharePrefarence(SurahActivity.this, "last_recite_surah_total_ayah", String.valueOf(total_ayah));
+                            Tools.SaveDataToSharePrefarence(SurahActivity.this, "last_recite_surah_number", String.valueOf(surah_number));
+                            if (ayah_position_num == 0) {
+                                Tools.SaveDataToSharePrefarence(SurahActivity.this, "ayah_last_position", String.valueOf(1));
+                            } else {
+                                Tools.SaveDataToSharePrefarence(SurahActivity.this, "ayah_last_position", String.valueOf(ayah_position_num));
+                            }
+                        }
+                    }
+                });
+                break;
+            }
+            case "ayah_ul_kursi": {
+                if (!arabic_lang.equals("Disable")) {
+                    ayahs = db.getAyahUlKursi(arabic_lang);
+                }
+
+                if (!toggle_en_trans.equals("Disable")) {
+                    en_trans = db.getAyahUlKursi("English_Transliteration");
+                }
+
+                List<Language> selected_trans = db.getSelectedLanguage();
+                if (selected_trans.size() != 0) {
+                    for (Language language : selected_trans) {
+                        trans_ayahs = db.getAyahUlKursi(language.getLanguage());
+                    }
+                }
+
+                if (arabic_lang.equals("Disable") && toggle_en_trans.equals("Disable") && selected_trans.size() == 0) {
+                    Tools.SaveDataToSharePrefarence(SurahActivity.this, "Arabic_Lang", "Ar_Uthamani");
+                    ayahs = db.getAyahUlKursi("Ar_Uthamani");
+                }
+
+                ayahAdapter = new AyahAdapter(this, ayahs, en_trans, trans_ayahs, total_ayah);
+                mAyahRecyclerView.setAdapter(ayahAdapter);
+
+                ayah_number_TV.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        final Dialog dialog = new Dialog(SurahActivity.this);
+                        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                        dialog.setContentView(R.layout.ayah_number_layout);
+                        dialog.show();
+
+                        int width = (int) (getResources().getDisplayMetrics().widthPixels * 0.30);
+                        int height = WindowManager.LayoutParams.WRAP_CONTENT;
+
+                        Objects.requireNonNull(dialog.getWindow()).setLayout(width, height);
+
+                        ayah_number_LV = dialog.findViewById(R.id.ayah_number_listview_id);
+                        List<Integer> ayah_number = new ArrayList<>();
+                        int i = 1;
+                        while (i <= total_ayah) {
+                            ayah_number.add(i);
+                            i++;
+                        }
+                        ayah_number_adapter = new ArrayAdapter<>(dialog.getContext(), R.layout.single_ayah_number, ayah_number);
+                        ayah_number_LV.setAdapter(ayah_number_adapter);
+
+                        search_ayah_number_ET = dialog.findViewById(R.id.search_ayah_number_id);
+
+                        search_ayah_number_ET.addTextChangedListener(new TextWatcher() {
+                            @Override
+                            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+                            }
+
+                            @Override
+                            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                                SurahActivity.this.ayah_number_adapter.getFilter().filter(s);
+                            }
+
+                            @Override
+                            public void afterTextChanged(Editable s) {
+
+                            }
+                        });
+
+                        ayah_number_LV.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                            @Override
+                            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                                // go to ayah
+                                ayahlayoutManager.scrollToPosition(position);
+                                dialog.dismiss();
+                            }
+                        });
+                    }
+                });
+                break;
+            }
+            case "al_baqara_285_286_ayah": {
+                if (!arabic_lang.equals("Disable")) {
                     ayahs = db.getAlBaqara285_286Ayah("Ar_Uthamani");
                 }
-            }
 
-            if (!toggle_en_trans.equals("Disable")) {
-                en_trans = db.getAlBaqara285_286Ayah("English_Transliteration");
-            }
-
-            List<Language> selected_trans = db.getSelectedLanguage();
-            if (selected_trans.size() != 0) {
-                for (Language language : selected_trans) {
-                    trans_ayahs = db.getAlBaqara285_286Ayah(language.getLanguage());
+                if (!toggle_en_trans.equals("Disable")) {
+                    en_trans = db.getAlBaqara285_286Ayah("English_Transliteration");
                 }
-            }
 
-            if (arabic_lang.equals("Disable") && toggle_en_trans.equals("Disable") && selected_trans.size() == 0) {
-                Tools.SaveDataToSharePrefarence(SurahActivity.this, "Arabic_Lang", "Ar_Uthamani");
-                ayahs = db.getAlBaqara285_286Ayah("Ar_Uthamani");
-            }
-
-            ayahAdapter = new AyahAdapter(this, ayahs, en_trans, trans_ayahs, total_ayah);
-            mAyahRecyclerView.setAdapter(ayahAdapter);
-
-            ayah_number_TV.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    final Dialog dialog = new Dialog(SurahActivity.this);
-                    dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-                    dialog.setContentView(R.layout.ayah_number_layout);
-                    dialog.show();
-
-                    int width = (int) (getResources().getDisplayMetrics().widthPixels * 0.30);
-                    int height = WindowManager.LayoutParams.WRAP_CONTENT;
-
-                    Objects.requireNonNull(dialog.getWindow()).setLayout(width, height);
-
-                    ayah_number_LV = dialog.findViewById(R.id.ayah_number_listview_id);
-                    List<Integer> ayah_number = new ArrayList<>();
-                    int i = 1;
-                    while (i <= total_ayah) {
-                        ayah_number.add(i);
-                        i++;
+                List<Language> selected_trans = db.getSelectedLanguage();
+                if (selected_trans.size() != 0) {
+                    for (Language language : selected_trans) {
+                        trans_ayahs = db.getAlBaqara285_286Ayah(language.getLanguage());
                     }
-                    ayah_number_adapter = new ArrayAdapter<>(dialog.getContext(), R.layout.single_ayah_number, ayah_number);
-                    ayah_number_LV.setAdapter(ayah_number_adapter);
-
-                    search_ayah_number_ET = dialog.findViewById(R.id.search_ayah_number_id);
-
-                    search_ayah_number_ET.addTextChangedListener(new TextWatcher() {
-                        @Override
-                        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-                        }
-
-                        @Override
-                        public void onTextChanged(CharSequence s, int start, int before, int count) {
-                            SurahActivity.this.ayah_number_adapter.getFilter().filter(s);
-                        }
-
-                        @Override
-                        public void afterTextChanged(Editable s) {
-
-                        }
-                    });
-
-                    ayah_number_LV.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                        @Override
-                        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                            // go to ayah
-                            ayahlayoutManager.scrollToPosition(position);
-                            dialog.dismiss();
-                        }
-                    });
                 }
-            });
-        } else if (model.equals("al_hashr_20_24_ayah")) {
-            if (!arabic_lang.equals("Disable")) {
-                if (!arabic_lang.equals("")) {
-                    ayahs = db.getAlHashr20_24Ayah(arabic_lang);
-                } else {
+
+                if (arabic_lang.equals("Disable") && toggle_en_trans.equals("Disable") && selected_trans.size() == 0) {
+                    Tools.SaveDataToSharePrefarence(SurahActivity.this, "Arabic_Lang", "Ar_Uthamani");
+                    ayahs = db.getAlBaqara285_286Ayah("Ar_Uthamani");
+                }
+
+                ayahAdapter = new AyahAdapter(this, ayahs, en_trans, trans_ayahs, total_ayah);
+                mAyahRecyclerView.setAdapter(ayahAdapter);
+
+                ayah_number_TV.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        final Dialog dialog = new Dialog(SurahActivity.this);
+                        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                        dialog.setContentView(R.layout.ayah_number_layout);
+                        dialog.show();
+
+                        int width = (int) (getResources().getDisplayMetrics().widthPixels * 0.30);
+                        int height = WindowManager.LayoutParams.WRAP_CONTENT;
+
+                        Objects.requireNonNull(dialog.getWindow()).setLayout(width, height);
+
+                        ayah_number_LV = dialog.findViewById(R.id.ayah_number_listview_id);
+                        List<Integer> ayah_number = new ArrayList<>();
+                        int i = 1;
+                        while (i <= total_ayah) {
+                            ayah_number.add(i);
+                            i++;
+                        }
+                        ayah_number_adapter = new ArrayAdapter<>(dialog.getContext(), R.layout.single_ayah_number, ayah_number);
+                        ayah_number_LV.setAdapter(ayah_number_adapter);
+
+                        search_ayah_number_ET = dialog.findViewById(R.id.search_ayah_number_id);
+
+                        search_ayah_number_ET.addTextChangedListener(new TextWatcher() {
+                            @Override
+                            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+                            }
+
+                            @Override
+                            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                                SurahActivity.this.ayah_number_adapter.getFilter().filter(s);
+                            }
+
+                            @Override
+                            public void afterTextChanged(Editable s) {
+
+                            }
+                        });
+
+                        ayah_number_LV.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                            @Override
+                            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                                // go to ayah
+                                ayahlayoutManager.scrollToPosition(position);
+                                dialog.dismiss();
+                            }
+                        });
+                    }
+                });
+                break;
+            }
+            case "al_hashr_20_24_ayah": {
+                if (!arabic_lang.equals("Disable")) {
                     ayahs = db.getAlHashr20_24Ayah("Ar_Uthamani");
                 }
-            }
 
-            if (!toggle_en_trans.equals("Disable")) {
-                en_trans = db.getAlHashr20_24Ayah("English_Transliteration");
-            }
-
-            List<Language> selected_trans = db.getSelectedLanguage();
-            if (selected_trans.size() != 0) {
-                for (Language language : selected_trans) {
-                    trans_ayahs = db.getAlHashr20_24Ayah(language.getLanguage());
+                if (!toggle_en_trans.equals("Disable")) {
+                    en_trans = db.getAlHashr20_24Ayah("English_Transliteration");
                 }
-            }
 
-            if (arabic_lang.equals("Disable") && toggle_en_trans.equals("Disable") && selected_trans.size() == 0) {
-                Tools.SaveDataToSharePrefarence(SurahActivity.this, "Arabic_Lang", "Ar_Uthamani");
-                ayahs = db.getAlHashr20_24Ayah("Ar_Uthamani");
-            }
-
-            ayahAdapter = new AyahAdapter(this, ayahs, en_trans, trans_ayahs, total_ayah);
-            mAyahRecyclerView.setAdapter(ayahAdapter);
-
-            ayah_number_TV.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    final Dialog dialog = new Dialog(SurahActivity.this);
-                    dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-                    dialog.setContentView(R.layout.ayah_number_layout);
-                    dialog.show();
-
-                    int width = (int) (getResources().getDisplayMetrics().widthPixels * 0.30);
-                    int height = WindowManager.LayoutParams.WRAP_CONTENT;
-
-                    Objects.requireNonNull(dialog.getWindow()).setLayout(width, height);
-
-                    ayah_number_LV = dialog.findViewById(R.id.ayah_number_listview_id);
-                    List<Integer> ayah_number = new ArrayList<>();
-                    int i = 1;
-                    while (i <= total_ayah) {
-                        ayah_number.add(i);
-                        i++;
+                List<Language> selected_trans = db.getSelectedLanguage();
+                if (selected_trans.size() != 0) {
+                    for (Language language : selected_trans) {
+                        trans_ayahs = db.getAlHashr20_24Ayah(language.getLanguage());
                     }
-                    ayah_number_adapter = new ArrayAdapter<>(dialog.getContext(), R.layout.single_ayah_number, ayah_number);
-                    ayah_number_LV.setAdapter(ayah_number_adapter);
-
-                    search_ayah_number_ET = dialog.findViewById(R.id.search_ayah_number_id);
-
-                    search_ayah_number_ET.addTextChangedListener(new TextWatcher() {
-                        @Override
-                        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-                        }
-
-                        @Override
-                        public void onTextChanged(CharSequence s, int start, int before, int count) {
-                            SurahActivity.this.ayah_number_adapter.getFilter().filter(s);
-                        }
-
-                        @Override
-                        public void afterTextChanged(Editable s) {
-
-                        }
-                    });
-
-                    ayah_number_LV.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                        @Override
-                        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                            // go to ayah
-                            ayahlayoutManager.scrollToPosition(position);
-                            dialog.dismiss();
-                        }
-                    });
                 }
-            });
+
+                if (arabic_lang.equals("Disable") && toggle_en_trans.equals("Disable") && selected_trans.size() == 0) {
+                    Tools.SaveDataToSharePrefarence(SurahActivity.this, "Arabic_Lang", "Ar_Uthamani");
+                    ayahs = db.getAlHashr20_24Ayah("Ar_Uthamani");
+                }
+
+                ayahAdapter = new AyahAdapter(this, ayahs, en_trans, trans_ayahs, total_ayah);
+                mAyahRecyclerView.setAdapter(ayahAdapter);
+
+                ayah_number_TV.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        final Dialog dialog = new Dialog(SurahActivity.this);
+                        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                        dialog.setContentView(R.layout.ayah_number_layout);
+                        dialog.show();
+
+                        int width = (int) (getResources().getDisplayMetrics().widthPixels * 0.30);
+                        int height = WindowManager.LayoutParams.WRAP_CONTENT;
+
+                        Objects.requireNonNull(dialog.getWindow()).setLayout(width, height);
+
+                        ayah_number_LV = dialog.findViewById(R.id.ayah_number_listview_id);
+                        List<Integer> ayah_number = new ArrayList<>();
+                        int i = 1;
+                        while (i <= total_ayah) {
+                            ayah_number.add(i);
+                            i++;
+                        }
+                        ayah_number_adapter = new ArrayAdapter<>(dialog.getContext(), R.layout.single_ayah_number, ayah_number);
+                        ayah_number_LV.setAdapter(ayah_number_adapter);
+
+                        search_ayah_number_ET = dialog.findViewById(R.id.search_ayah_number_id);
+
+                        search_ayah_number_ET.addTextChangedListener(new TextWatcher() {
+                            @Override
+                            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+                            }
+
+                            @Override
+                            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                                SurahActivity.this.ayah_number_adapter.getFilter().filter(s);
+                            }
+
+                            @Override
+                            public void afterTextChanged(Editable s) {
+
+                            }
+                        });
+
+                        ayah_number_LV.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                            @Override
+                            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                                // go to ayah
+                                ayahlayoutManager.scrollToPosition(position);
+                                dialog.dismiss();
+                            }
+                        });
+                    }
+                });
+                break;
+            }
         }
     }
 
@@ -553,6 +549,7 @@ public class SurahActivity extends AppCompatActivity {
         switch (item.getItemId()) {
             case R.id.arabic_lang:
                 Intent arabicLangIntent = new Intent(this, ArabicLangActivity.class);
+                arabicLangIntent.putExtra("toggle_value", arabic_lang);
                 startActivity(arabicLangIntent);
                 break;
             case R.id.toggle_english_transliteration:
