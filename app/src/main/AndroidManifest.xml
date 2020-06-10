@@ -18,7 +18,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".CalenderActivity"/>
+        <activity android:name=".QuranSearchActivity"></activity>
+        <activity android:name=".CalenderActivity" />
         <activity
             android:name=".ImportantQuranAyahActivity"
             android:windowSoftInputMode="stateHidden" />
@@ -28,13 +29,15 @@
             android:windowSoftInputMode="stateHidden" />
         <activity
             android:name=".SurahActivity"
-            android:windowSoftInputMode="stateHidden"/>
+            android:windowSoftInputMode="stateHidden" />
         <activity android:name=".SettingsActivity" />
-        <activity android:name=".MainActivity"
+        <activity
+            android:name=".MainActivity"
             android:configChanges="uiMode">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <action android:name="android.intent.action.VIEW" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>

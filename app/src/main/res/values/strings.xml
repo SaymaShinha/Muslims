@@ -45,6 +45,7 @@
     <string name="enable">Enable</string>
     <string name="search">Search…</string>
     <string name="sort">Sort &#9660;</string>
+    <string name="search_quran">Search &#9660;</string>
     <string name="end_ayah_1">&#xFD3F;</string>
     <string name="end_ayah_2">&#xFD3E;</string>
     <string name="important_quran_ayah">Important Quran Ayah</string>
@@ -68,4 +69,5 @@
     <string name="city">City</string>
     <string name="country">Country</string>
     <string name="submit">Submit</string>
+    <string name="search_on_quran">Search On Quran</string>
 </resources>

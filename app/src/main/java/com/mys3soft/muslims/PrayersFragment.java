@@ -212,8 +212,7 @@ public class PrayersFragment extends Fragment {
                     prayer_timings_file_name = "latitude="+latitude+"&longitude="+longitude+"&method=2&month="+string_date[1]+"&year="+string_date[2];
                     downloadData( "http://api.aladhan.com/v1/calendar?"+prayer_timings_file_name);
                 } else if (prayer_timings_file_name.equals("By City & Country")) {
-                    prayer_timings_file_name = "city="+location.split(",")[0]+"&country="+location.split(",")[1]+"&month="+string_date[1]+"&year="+string_date[2];
-
+                    prayer_timings_file_name = "city="+location.split(",")[0]+"&country="+location.split(",")[1].trim()+"&month="+string_date[1]+"&year="+string_date[2];
                     downloadData("http://api.aladhan.com/v1/calendarByCity?"+prayer_timings_file_name);
                 }
             }

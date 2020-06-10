@@ -13,9 +13,6 @@ import com.mys3soft.muslims.Models.PrayerTimings;
 import com.mys3soft.muslims.Models.RevSurah;
 import com.mys3soft.muslims.Models.Surah;
 import com.mys3soft.muslims.Models.World_Cities;
-
-import java.sql.Date;
-import java.time.Year;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -105,6 +102,7 @@ public class DBHelper extends SQLiteOpenHelper {
     public static final String QURAN_Muhammad_Sarwar_TABLE = "Muhammad_Sarwar";
     public static final String QURAN_Abul_A_ala_Maududi_TABLE = "Abul_A_ala_Maududi";
     private static final String QURAN_UR_Ahmed_Raza_Khan_TABLE = "Ur_Ahmed_Raza_Khan";
+    private static final String QURAN_EN_Ahmed_Raza_Khan_TABLE = "En_Ahmed_Raza_Khan";
     public static final String QURAN_Amir_Zaidan_TABLE = "Amir_Zaidan";
     public static final String QURAN_Ministry_of_Awqaf_Egypt_TABLE = "Ministry_of_Awqaf_Egypt";
     public static final String QURAN_Simple_Clean_TABLE = "Simple_Clean";
@@ -227,7 +225,7 @@ public class DBHelper extends SQLiteOpenHelper {
 
 
     public DBHelper(Context context) {
-        super(context, DATABASE_NAME, null, 19);
+        super(context, DATABASE_NAME, null, 20);
     }
 
     @Override
@@ -246,7 +244,7 @@ public class DBHelper extends SQLiteOpenHelper {
                 REV_SURAHLIST_COLUMN_SURAH_EN_TRANSLATION_NAME + " text, " + REV_SURAHLIST_COLUMN_REVELATION_TYPE + " text," +
                 REV_SURAHLIST_COLUMN_NOTE + " text," + REV_SURAHLIST_COLUMN_TOTAL_AYAH + " integer)");
 
-        db.execSQL("create table " + PRAYERTIMINGS_TABLE + "(" + PRAYERTIMINGS_COLUMN_ID + " integer primary key, " +
+       db.execSQL("create table " + PRAYERTIMINGS_TABLE + "(" + PRAYERTIMINGS_COLUMN_ID + " integer primary key, " +
                 PRAYERTIMINGS_COLUMN_IMSAK + " text, " + PRAYERTIMINGS_COLUMN_FAJR + " text, " +
                 PRAYERTIMINGS_COLUMN_SUNRISE + " text, " + PRAYERTIMINGS_COLUMN_DHUHR + " text, " +
                 PRAYERTIMINGS_COLUMN_ASR + " text, " + PRAYERTIMINGS_COLUMN_SUNSET + " text, " +
@@ -333,6 +331,19 @@ public class DBHelper extends SQLiteOpenHelper {
                 QURAN_NAME + " text, " + QURAN_TRANSELATOR_EN_NAME + " text," +
                 QURAN_FORMAT + " text, " + QURAN_TYPE + " text)");
 
+        db.execSQL("create table " + QURAN_EN_Ahmed_Raza_Khan_TABLE + "(" + QURAN_ID + " integer primary key, " +
+                QURAN_IDENTIFIER + " text, " + QURAN_SURAH_NUMBER + " integer, " +
+                QURAN_SURAH_AR_NAME + " text, " + QURAN_SURAH_EN_NAME + " text, " +
+                QURAN_SURAH_EN_NAME_TRANSLATION + " text, " + QURAN_REVELATION_TYPE + " text, " +
+                QURAN_AYAH_NUMBER + " integer, " + QURAN_TEXT + " text, " +
+                QURAN_JUZ + " integer, " + QURAN_MANZIL + " integer, " +
+                QURAN_PAGE + " integer, " + QURAN_RUKU + " integer ," +
+                QURAN_HIZB_QUARTER + " integer, " + QURAN_SAJDA + " boolean," +
+                QURAN_SAJDA_ID + " integer, " + QURAN_SAJDA_RECOMMENDED + " boolean," +
+                QURAN_SAJDA_OBLIGATORY + " boolean, " + QURAN_LANGUAGE + " text," +
+                QURAN_NAME + " text, " + QURAN_TRANSELATOR_EN_NAME + " text," +
+                QURAN_FORMAT + " text, " + QURAN_TYPE + " text)");
+
         db.execSQL("create table " + LANGUAGE_TABLE + "(" + LANGUAGE_COLUMN_ID + " integer primary key, " +
                 LANGUAGE_COLUMN_SELECTED + " boolean, " + LANGUAGE_COLUMN_TRANSLATOR + " text)");
 
@@ -364,6 +375,7 @@ public class DBHelper extends SQLiteOpenHelper {
         db.execSQL("drop table if exists " + QURAN_BN_Muhiuddin_Khan_TABLE);
         db.execSQL("drop table if exists " + QURAN_EN_Abdullah_Yusuf_Ali_TABLE);
         db.execSQL("drop table if exists " + QURAN_UR_Ahmed_Raza_Khan_TABLE);
+        db.execSQL("drop table if exists " + QURAN_EN_Ahmed_Raza_Khan_TABLE);
         db.execSQL("drop table if exists " + LANGUAGE_TABLE);
         db.execSQL("drop table if exists " + CALENDER_TABLE);
         onCreate(db);
@@ -603,13 +615,12 @@ public class DBHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
         List<Surah> surahList = new ArrayList<>();
 
-        Cursor cursor = db.rawQuery("select * from " + SURAHLIST_TABLE + " where " + SURAHLIST_COLUMN_SURAH_EN_TRANSLATION_NAME +
-                " like '%" + searchKey +"%' or "+ SURAHLIST_COLUMN_SURAH_EN_NAME +
-                " like '%" + searchKey +"%' or " + SURAHLIST_COLUMN_SURAH_AR_NAME +
-                " like '%" + searchKey +"%' or " + SURAHLIST_COLUMN_REVELATION_TYPE +
-                " like '%" + searchKey +"%' or " + SURAHLIST_COLUMN_SURAH_NUMBER +
-                " like '%" + searchKey +"%' or " + SURAHLIST_COLUMN_TOTAL_AYAH +
-                " like '%" + searchKey +"%'", null);
+        Cursor cursor = db.rawQuery("select * from " + SURAHLIST_TABLE +
+                " where " + SURAHLIST_COLUMN_SURAH_EN_TRANSLATION_NAME+ " like '%" + searchKey +"%' or "+
+                SURAHLIST_COLUMN_SURAH_EN_NAME + " like '%" + searchKey +"%' or " +
+                SURAHLIST_COLUMN_TOTAL_AYAH + " like '%" + searchKey +"%' or " +
+                SURAHLIST_COLUMN_REVELATION_TYPE + " like '%" + searchKey +"%' or " +
+                SURAHLIST_COLUMN_SURAH_NUMBER + " like '%" + searchKey +"%'", null);
         cursor.moveToFirst();
 
         while (!cursor.isAfterLast()) {
@@ -995,6 +1006,49 @@ public class DBHelper extends SQLiteOpenHelper {
         db.close();
         return ayahList;
     }
+
+    public List<Ayah> searchQuranAyah(String table_name, String searchKey){
+        SQLiteDatabase db = this.getReadableDatabase();
+        List<Ayah> ayahList = new ArrayList<>();
+        Cursor cursor = db.rawQuery("select * from '"+ table_name+"' where "+
+                QURAN_TEXT + " like '%" + searchKey +"%' order by "+QURAN_AYAH_NUMBER, null);
+        cursor.moveToFirst();
+        while (!cursor.isAfterLast()){
+            Ayah ayah = new Ayah(cursor.getInt(cursor.getColumnIndex("id")),
+                    cursor.getString(cursor.getColumnIndex("identifier")),
+                    cursor.getInt(cursor.getColumnIndex("surah_number")),
+                    cursor.getString(cursor.getColumnIndex("surah_ar_name")),
+                    cursor.getString(cursor.getColumnIndex("surah_en_name")),
+                    cursor.getString(cursor.getColumnIndex("surah_en_name_translation")),
+                    cursor.getString(cursor.getColumnIndex("revelation_type")),
+                    cursor.getInt(cursor.getColumnIndex("ayah_number")),
+                    cursor.getString(cursor.getColumnIndex("text")),
+                    cursor.getInt(cursor.getColumnIndex("juz")),
+                    cursor.getInt(cursor.getColumnIndex("manzil")),
+                    cursor.getInt(cursor.getColumnIndex("page")),
+                    cursor.getInt(cursor.getColumnIndex("ruku")),
+                    cursor.getInt(cursor.getColumnIndex("hizb_quarter")),
+                    cursor.getString(cursor.getColumnIndex("sajda")).equals("true"),
+                    cursor.getInt(cursor.getColumnIndex("sajda_id")),
+                    cursor.getString(cursor.getColumnIndex("sajda_recommended")).equals("true") ,
+                    cursor.getString(cursor.getColumnIndex("sajda_obligatory")).equals("true"),
+                    cursor.getString(cursor.getColumnIndex("language")),
+                    cursor.getString(cursor.getColumnIndex("name")),
+                    cursor.getString(cursor.getColumnIndex("transelator_en_name")),
+                    cursor.getString(cursor.getColumnIndex("format")),
+                    cursor.getString(cursor.getColumnIndex("type")));
+            ayahList.add(ayah);
+
+            cursor.moveToNext();
+        }
+
+        cursor.close();
+        db.close();
+
+        return ayahList;
+    }
+
+
     //endregion:Ayah_List
 
     //region:Language

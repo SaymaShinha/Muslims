@@ -51,7 +51,7 @@ public class MainActivity extends AppCompatActivity {
 
     String[] mDefaultDataUrls = {"/Muslims/Quran/islam_public_quran__info.json",
             "/Muslims/Quran/islam_public_quran__info__according__to__revelation.json",
-            "/Muslims/Prayer/islam_public_world_cities.json",
+            "/Muslims/Quran/islam_public_en__ahmed__raza__khan.json",
             "/Muslims/Quran/islam_public_ar__uthmani.json",
             "/Muslims/Quran/islam_public_en__english__transliteration.json"};
     String[] mDefaultFiles = {"Muslims/Quran", "Muslims/Prayer", "Muslims/Calender"};
@@ -161,12 +161,6 @@ public class MainActivity extends AppCompatActivity {
             return;
         }
 
-        //ReadAndWriteFiles.readFileAndSaveToDataBase( this,"/Muslims/Quran/islam_public_quran__info.json", "Surah_T");
-        //ReadAndWriteFiles.readFileAndSaveToDataBase( this,"/Muslims/Quran/islam_public_quran__info__according__to__revelation.json", "Surah_R");
-        //ReadAndWriteFiles.readFileAndSaveToDataBase( this,"/Muslims/Prayer/islam_public_world_cities.json", "World_Cities");
-        //ReadAndWriteFiles.readFileAndSaveQuranToDataBase( this,"/Muslims/Quran/islam_public_ar__uthmani.json", "Ar_Uthamani");
-        //ReadAndWriteFiles.readFileAndSaveQuranToDataBase( this,"/Muslims/Quran/islam_public_en__english__transliteration.json", "English_Transliteration");
-
         ThreadDemo T1 = new ThreadDemo("Surah_T");
         T1.start();
 
@@ -179,7 +173,7 @@ public class MainActivity extends AppCompatActivity {
         ThreadDemo T4 = new ThreadDemo("English_Transliteration");
         T4.start();
 
-        ThreadDemo T5 = new ThreadDemo("World_Cities");
+        ThreadDemo T5 = new ThreadDemo("En_Ahmed_Raza_Khan");
         T5.start();
 
         addLanguage();
@@ -234,12 +228,6 @@ public class MainActivity extends AppCompatActivity {
                         progressDialog.setCancelable(true);
                         progressDialog.show();
 
-                        //ReadAndWriteFiles.readFileAndSaveToDataBase( this,"/Muslims/Quran/islam_public_quran__info.json", "Surah_T");
-                        //ReadAndWriteFiles.readFileAndSaveToDataBase( this,"/Muslims/Quran/islam_public_quran__info__according__to__revelation.json", "Surah_R");
-                        //ReadAndWriteFiles.readFileAndSaveToDataBase( this,"/Muslims/Prayer/islam_public_world_cities.json", "World_Cities");
-                        //ReadAndWriteFiles.readFileAndSaveQuranToDataBase( this,"/Muslims/Quran/islam_public_ar__uthmani.json", "Ar_Uthamani");
-                        //ReadAndWriteFiles.readFileAndSaveQuranToDataBase( this,"/Muslims/Quran/islam_public_en__english__transliteration.json", "English_Transliteration");
-
                         ThreadDemo T1 = new ThreadDemo("Surah_T");
                         T1.start();
 
@@ -252,7 +240,7 @@ public class MainActivity extends AppCompatActivity {
                         ThreadDemo T4 = new ThreadDemo("English_Transliteration");
                         T4.start();
 
-                        ThreadDemo T5 = new ThreadDemo("World_Cities");
+                        ThreadDemo T5 = new ThreadDemo("En_Ahmed_Raza_Khan");
                         T5.start();
 
                         addLanguage();
@@ -411,7 +399,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void addLanguage(){
-        String[] languageList = new String[]{"Bn_Muhiuddin_Khan", "Ur_Ahmed_Raza_Khan", "En_Abdullah_Yusuf_Ali"};
+        String[] languageList = new String[]{"Bn_Muhiuddin_Khan", "Ur_Ahmed_Raza_Khan", "En_Ahmed_Raza_Khan", "En_Abdullah_Yusuf_Ali"};
         for (String s : languageList) {
             db.insertLanguage(s, false);
         }
@@ -438,15 +426,16 @@ public class MainActivity extends AppCompatActivity {
                     case "Surah_R":
                         ReadAndWriteFiles.readFileAndSaveToDataBase(context, "/Muslims/Quran/islam_public_quran__info__according__to__revelation.json", "Surah_R");
                         break;
-                    case "World_Cities":
-                        ReadAndWriteFiles.readFileAndSaveToDataBase(context, "/Muslims/Prayer/islam_public_world_cities.json", "World_Cities");
-                        break;
                     case "Ar_Uthamani":
                         ReadAndWriteFiles.readFileAndSaveQuranToDataBase(context, "/Muslims/Quran/islam_public_ar__uthmani.json", "Ar_Uthamani");
                         break;
                     case "English_Transliteration":
                         ReadAndWriteFiles.readFileAndSaveQuranToDataBase(context, "/Muslims/Quran/islam_public_en__english__transliteration.json", "English_Transliteration");
                         break;
+                    case "En_Ahmed_Raza_Khan":
+                        ReadAndWriteFiles.readFileAndSaveQuranToDataBase(context, "/Muslims/Quran/islam_public_en__ahmed__raza__khan.json", "En_Ahmed_Raza_Khan");
+                        break;
+
                 }
 
                 // Let the thread sleep for a while.
@@ -467,9 +456,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void OnGPS() {
-        String latitude = Tools.GetDataFromSharePrefarence(this, "Imsak");
+        String date = Tools.GetDataFromSharePrefarence(this, "Date");
 
-        if (latitude.equals("") && longitude.equals("")){
+        if (date.equals("")){
             final AlertDialog.Builder builder = new AlertDialog.Builder(this);
             builder.setMessage("Enable GPS").setCancelable(false).setPositiveButton("Yes", new  DialogInterface.OnClickListener() {
                 @Override

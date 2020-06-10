@@ -2,7 +2,6 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-
     <item
         android:id="@+id/arabic_lang"
         android:title="@string/arabic">
@@ -21,5 +20,4 @@
         android:id="@+id/translation"
         android:title="@string/translation">
     </item>
-
 </menu>
