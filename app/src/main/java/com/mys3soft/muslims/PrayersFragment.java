@@ -206,14 +206,14 @@ public class PrayersFragment extends Fragment {
 
                 ShowCurrentPrayerTime(imsak, fajr, sunrise, dhuhr, asr, sunset, maghrib, isha, midnight);
             } else {
-                if (prayer_timings_file_name.equals("By Device Location")) {
+                if (location.equals("By Device Location")) {
                     String latitude = Tools.GetDataFromSharePrefarence(context, "latitude");
                     String longitude = Tools.GetDataFromSharePrefarence(context, "longitude");
-                    prayer_timings_file_name = "latitude="+latitude+"&longitude="+longitude+"&method=2&month="+string_date[1]+"&year="+string_date[2];
-                    downloadData( "http://api.aladhan.com/v1/calendar?"+prayer_timings_file_name);
-                } else if (prayer_timings_file_name.equals("By City & Country")) {
-                    prayer_timings_file_name = "city="+location.split(",")[0]+"&country="+location.split(",")[1].trim()+"&month="+string_date[1]+"&year="+string_date[2];
-                    downloadData("http://api.aladhan.com/v1/calendarByCity?"+prayer_timings_file_name);
+                    prayer_timings_file_name = "latitude="+latitude+"&longitude="+longitude+"&method=2";
+                    downloadData( "http://api.aladhan.com/v1/timings/1398332113"+prayer_timings_file_name);
+                } else {
+                    prayer_timings_file_name = "city="+location.split(",")[0]+"&country="+location.split(",")[1].trim()+"&method=2";
+                    downloadData("http://api.aladhan.com/v1/timingsByCity?"+prayer_timings_file_name);
                 }
             }
         } catch (Exception e) {

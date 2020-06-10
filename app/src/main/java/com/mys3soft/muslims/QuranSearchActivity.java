@@ -61,13 +61,17 @@ public class QuranSearchActivity extends AppCompatActivity {
         super.onStart();
 
         language = Tools.GetDataFromSharePrefarence(QuranSearchActivity.this, "search_quran");
+        String btn_txt = Tools.GetDataFromSharePrefarence(this, "search_quran_btn_txt");
+
+        if (!btn_txt.equals("")){
+            btnSearchBy.setText(btn_txt);
+        }
+
         ayahList.clear();
         if (!language.equals("")){
             ayahList = db.searchQuranAyah(language, search_key);
-            btnSearchBy.setText(language);
         } else{
             ayahList = db.searchQuranAyah("En_Ahmed_Raza_Khan", search_key);
-            btnSearchBy.setText("En_Ahmed_Raza_Khan");
         }
         QuranSearchAdapter searchAdapter = new QuranSearchAdapter(QuranSearchActivity.this, ayahList);
         recyclerView.setAdapter(searchAdapter );
@@ -144,22 +148,27 @@ public class QuranSearchActivity extends AppCompatActivity {
                         switch (lang) {
                             case "Arabic Quran":
                                 Tools.SaveDataToSharePrefarence(QuranSearchActivity.this, "search_quran", "Ar_Uthamani");
+                                Tools.SaveDataToSharePrefarence(QuranSearchActivity.this, "search_quran_btn_txt", "Arabic");
                                 optionDialog.cancel();
                                 break;
                             case "English Transliteration":
                                 Tools.SaveDataToSharePrefarence(QuranSearchActivity.this, "search_quran", "English_Transliteration");
+                                Tools.SaveDataToSharePrefarence(QuranSearchActivity.this, "search_quran_btn_txt", "En Transliteration");
                                 optionDialog.cancel();
                                 break;
                             case "Bangla Quran":
                                 Tools.SaveDataToSharePrefarence(QuranSearchActivity.this, "search_quran", "Bn_Muhiuddin_Khan");
+                                Tools.SaveDataToSharePrefarence(QuranSearchActivity.this, "search_quran_btn_txt", "Bangla");
                                 optionDialog.cancel();
                                 break;
                             case "English Quran":
                                 Tools.SaveDataToSharePrefarence(QuranSearchActivity.this, "search_quran", "En_Ahmed_Raza_Khan");
+                                Tools.SaveDataToSharePrefarence(QuranSearchActivity.this, "search_quran_btn_txt", "English");
                                 optionDialog.cancel();
                                 break;
                             case "Urdu Quran":
                                 Tools.SaveDataToSharePrefarence(QuranSearchActivity.this, "search_quran", "Ur_Ahmed_Raza_Khan");
+                                Tools.SaveDataToSharePrefarence(QuranSearchActivity.this, "search_quran_btn_txt", "Urdu");
                                 optionDialog.cancel();
                                 break;
                         }
