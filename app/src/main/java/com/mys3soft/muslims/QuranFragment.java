@@ -163,8 +163,12 @@ public class QuranFragment extends Fragment {
         LinearLayout last_recite_linearLayout = mMainView.findViewById(R.id.quran_recite_last_position_LinearLayout_id);
         TextView textView = mMainView.findViewById(R.id.quran_recite_last_position_tv_id);
 
-        String tv_last_reciting_surah = last_recite_surah_name + " ( " + String.valueOf(Integer.valueOf(ayah_last_position)+1) + " ) ";
-        textView.setText(tv_last_reciting_surah);
+        if(!ayah_last_position.equals("")){
+            String tv_last_reciting_surah = last_recite_surah_name + " ( " + String.valueOf(Integer.valueOf(ayah_last_position)+1) + " ) ";
+            textView.setText(tv_last_reciting_surah);
+        } else{
+            textView.setText("");
+        }
 
 
         last_recite_linearLayout.setOnClickListener(new View.OnClickListener() {

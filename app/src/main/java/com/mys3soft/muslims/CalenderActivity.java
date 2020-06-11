@@ -75,13 +75,13 @@ public class CalenderActivity extends AppCompatActivity {
 
     public void showCalender(String string_date) {
         String[] date = string_date.split("/");
-        List<Calender> calender = db.getCalenderByGregorianMonthNumber(Integer.valueOf(date[1]));
+        List<Calender> calender = db.getCalenderByGregorianMonthNumber(Integer.parseInt(date[1]));
         if (calender.size() == 0){
             downloadData(string_date);
         } else{
             CalenderAdapter calenderAdapter = new CalenderAdapter(CalenderActivity.this, calender);
             recyclerView.setAdapter(calenderAdapter);
-            recyclerView.scrollToPosition(Integer.valueOf(date[0])-1);
+            recyclerView.scrollToPosition(Integer.parseInt(date[0])-1);
         }
     }
 

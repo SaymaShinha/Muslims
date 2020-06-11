@@ -209,8 +209,10 @@ public class PrayersFragment extends Fragment {
                 if (location.equals("By Device Location")) {
                     String latitude = Tools.GetDataFromSharePrefarence(context, "latitude");
                     String longitude = Tools.GetDataFromSharePrefarence(context, "longitude");
-                    prayer_timings_file_name = "latitude="+latitude+"&longitude="+longitude+"&method=2";
-                    downloadData( "http://api.aladhan.com/v1/timings/1398332113"+prayer_timings_file_name);
+                    if (!latitude.equals("") || !longitude.equals("")){
+                        prayer_timings_file_name = "latitude="+latitude+"&longitude="+longitude+"&method=2";
+                        downloadData( "http://api.aladhan.com/v1/timings/1398332113"+prayer_timings_file_name);
+                    }
                 } else {
                     prayer_timings_file_name = "city="+location.split(",")[0]+"&country="+location.split(",")[1].trim()+"&method=2";
                     downloadData("http://api.aladhan.com/v1/timingsByCity?"+prayer_timings_file_name);
