@@ -60,7 +60,7 @@ public class CalenderActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        
+
         String string_date = Tools.get_Today_DD_MM_YYYY_FormatedDate();
         showCalender(string_date);
 

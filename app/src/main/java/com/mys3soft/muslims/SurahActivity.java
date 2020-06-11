@@ -84,8 +84,11 @@ public class SurahActivity extends AppCompatActivity {
     public void onStart() {
         super.onStart();
 
-        ayah_position_num = Integer.parseInt(Tools.GetDataFromSharePrefarence(SurahActivity.this, "ayah_last_position"));
+        String ayah_last_position = Tools.GetDataFromSharePrefarence(SurahActivity.this, "ayah_last_position");
 
+        if (!ayah_last_position.equals("")) {
+            ayah_position_num = Integer.parseInt(ayah_last_position);
+        }
         mAyahRecyclerView.scrollToPosition(ayah_position_num);
 
         arabic_lang = Tools.GetDataFromSharePrefarence(SurahActivity.this, "Arabic_Lang");
@@ -193,13 +196,6 @@ public class SurahActivity extends AppCompatActivity {
                 break;
             }
             case "last_surah": {
-                String ayah_last_position = Tools.GetDataFromSharePrefarence(SurahActivity.this, "ayah_last_position");
-
-                if (!ayah_last_position.equals("")) {
-                    ayah_position_num = Integer.parseInt(ayah_last_position);
-                }
-                mAyahRecyclerView.scrollToPosition(ayah_position_num);
-
                 if (!arabic_lang.equals("Disable")) {
                     ayahs = db.getAllQuranAyah("Ar_Uthamani", surah_number);
                 }
@@ -298,7 +294,7 @@ public class SurahActivity extends AppCompatActivity {
             }
             case "ayah_ul_kursi": {
                 if (!arabic_lang.equals("Disable")) {
-                    ayahs = db.getAyahUlKursi(arabic_lang);
+                    ayahs = db.getAyahUlKursi("Ar_Uthamani");
                 }
 
                 if (!toggle_en_trans.equals("Disable")) {
@@ -334,7 +330,7 @@ public class SurahActivity extends AppCompatActivity {
                         Objects.requireNonNull(dialog.getWindow()).setLayout(width, height);
 
                         ayah_number_LV = dialog.findViewById(R.id.ayah_number_listview_id);
-                        List<Integer> ayah_number = new ArrayList<>();
+                        final List<Integer> ayah_number = new ArrayList<>();
                         int i = 1;
                         while (i <= total_ayah) {
                             ayah_number.add(i);
@@ -353,12 +349,11 @@ public class SurahActivity extends AppCompatActivity {
 
                             @Override
                             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                                SurahActivity.this.ayah_number_adapter.getFilter().filter(s);
                             }
 
                             @Override
                             public void afterTextChanged(Editable s) {
-
+                                SurahActivity.this.ayah_number_adapter.getFilter().filter(s);
                             }
                         });
 
@@ -366,10 +361,29 @@ public class SurahActivity extends AppCompatActivity {
                             @Override
                             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                                 // go to ayah
-                                ayahlayoutManager.scrollToPosition(position);
+                                mAyahRecyclerView.scrollToPosition(position);
+                                Tools.SaveDataToSharePrefarence(SurahActivity.this, "ayah_last_position", String.valueOf(position));
                                 dialog.dismiss();
                             }
                         });
+                    }
+                });
+
+                mAyahRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+                    @Override
+                    public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
+                        super.onScrollStateChanged(recyclerView, newState);
+                        if (newState == RecyclerView.SCROLL_STATE_IDLE) {
+                            ayah_position_num = Tools.getCurrentItem(mAyahRecyclerView);
+                            Tools.SaveDataToSharePrefarence(SurahActivity.this, "last_recite_surah_name", surah_name);
+                            Tools.SaveDataToSharePrefarence(SurahActivity.this, "last_recite_surah_total_ayah", String.valueOf(total_ayah));
+                            Tools.SaveDataToSharePrefarence(SurahActivity.this, "last_recite_surah_number", String.valueOf(surah_number));
+                            if (ayah_position_num == 0) {
+                                Tools.SaveDataToSharePrefarence(SurahActivity.this, "ayah_last_position", String.valueOf(1));
+                            } else {
+                                Tools.SaveDataToSharePrefarence(SurahActivity.this, "ayah_last_position", String.valueOf(ayah_position_num));
+                            }
+                        }
                     }
                 });
                 break;
@@ -412,7 +426,7 @@ public class SurahActivity extends AppCompatActivity {
                         Objects.requireNonNull(dialog.getWindow()).setLayout(width, height);
 
                         ayah_number_LV = dialog.findViewById(R.id.ayah_number_listview_id);
-                        List<Integer> ayah_number = new ArrayList<>();
+                        final List<Integer> ayah_number = new ArrayList<>();
                         int i = 1;
                         while (i <= total_ayah) {
                             ayah_number.add(i);
@@ -431,12 +445,11 @@ public class SurahActivity extends AppCompatActivity {
 
                             @Override
                             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                                SurahActivity.this.ayah_number_adapter.getFilter().filter(s);
                             }
 
                             @Override
                             public void afterTextChanged(Editable s) {
-
+                                SurahActivity.this.ayah_number_adapter.getFilter().filter(s);
                             }
                         });
 
@@ -444,10 +457,29 @@ public class SurahActivity extends AppCompatActivity {
                             @Override
                             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                                 // go to ayah
-                                ayahlayoutManager.scrollToPosition(position);
+                                mAyahRecyclerView.scrollToPosition(position);
+                                Tools.SaveDataToSharePrefarence(SurahActivity.this, "ayah_last_position", String.valueOf(position));
                                 dialog.dismiss();
                             }
                         });
+                    }
+                });
+
+                mAyahRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+                    @Override
+                    public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
+                        super.onScrollStateChanged(recyclerView, newState);
+                        if (newState == RecyclerView.SCROLL_STATE_IDLE) {
+                            ayah_position_num = Tools.getCurrentItem(mAyahRecyclerView);
+                            Tools.SaveDataToSharePrefarence(SurahActivity.this, "last_recite_surah_name", surah_name);
+                            Tools.SaveDataToSharePrefarence(SurahActivity.this, "last_recite_surah_total_ayah", String.valueOf(total_ayah));
+                            Tools.SaveDataToSharePrefarence(SurahActivity.this, "last_recite_surah_number", String.valueOf(surah_number));
+                            if (ayah_position_num == 0) {
+                                Tools.SaveDataToSharePrefarence(SurahActivity.this, "ayah_last_position", String.valueOf(1));
+                            } else {
+                                Tools.SaveDataToSharePrefarence(SurahActivity.this, "ayah_last_position", String.valueOf(ayah_position_num));
+                            }
+                        }
                     }
                 });
                 break;
@@ -490,7 +522,7 @@ public class SurahActivity extends AppCompatActivity {
                         Objects.requireNonNull(dialog.getWindow()).setLayout(width, height);
 
                         ayah_number_LV = dialog.findViewById(R.id.ayah_number_listview_id);
-                        List<Integer> ayah_number = new ArrayList<>();
+                        final List<Integer> ayah_number = new ArrayList<>();
                         int i = 1;
                         while (i <= total_ayah) {
                             ayah_number.add(i);
@@ -509,12 +541,11 @@ public class SurahActivity extends AppCompatActivity {
 
                             @Override
                             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                                SurahActivity.this.ayah_number_adapter.getFilter().filter(s);
                             }
 
                             @Override
                             public void afterTextChanged(Editable s) {
-
+                                SurahActivity.this.ayah_number_adapter.getFilter().filter(s);
                             }
                         });
 
@@ -522,10 +553,29 @@ public class SurahActivity extends AppCompatActivity {
                             @Override
                             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                                 // go to ayah
-                                ayahlayoutManager.scrollToPosition(position);
+                                mAyahRecyclerView.scrollToPosition(position);
+                                Tools.SaveDataToSharePrefarence(SurahActivity.this, "ayah_last_position", String.valueOf(position));
                                 dialog.dismiss();
                             }
                         });
+                    }
+                });
+
+                mAyahRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+                    @Override
+                    public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
+                        super.onScrollStateChanged(recyclerView, newState);
+                        if (newState == RecyclerView.SCROLL_STATE_IDLE) {
+                            ayah_position_num = Tools.getCurrentItem(mAyahRecyclerView);
+                            Tools.SaveDataToSharePrefarence(SurahActivity.this, "last_recite_surah_name", surah_name);
+                            Tools.SaveDataToSharePrefarence(SurahActivity.this, "last_recite_surah_total_ayah", String.valueOf(total_ayah));
+                            Tools.SaveDataToSharePrefarence(SurahActivity.this, "last_recite_surah_number", String.valueOf(surah_number));
+                            if (ayah_position_num == 0) {
+                                Tools.SaveDataToSharePrefarence(SurahActivity.this, "ayah_last_position", String.valueOf(1));
+                            } else {
+                                Tools.SaveDataToSharePrefarence(SurahActivity.this, "ayah_last_position", String.valueOf(ayah_position_num));
+                            }
+                        }
                     }
                 });
                 break;

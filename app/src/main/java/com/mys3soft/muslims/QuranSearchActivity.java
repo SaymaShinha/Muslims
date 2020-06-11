@@ -80,18 +80,18 @@ public class QuranSearchActivity extends AppCompatActivity {
         language = Tools.GetDataFromSharePrefarence(QuranSearchActivity.this, "search_quran");
         String btn_txt = Tools.GetDataFromSharePrefarence(this, "search_quran_btn_txt");
 
-        if (!btn_txt.equals("")){
+        if (!btn_txt.equals("")) {
             btnSearchBy.setText(btn_txt);
         }
 
         ayahList.clear();
-        if (!language.equals("")){
+        if (!language.equals("")) {
             ayahList = db.searchQuranAyah(language, search_key);
-        } else{
+        } else {
             ayahList = db.searchQuranAyah("En_Ahmed_Raza_Khan", search_key);
         }
         QuranSearchAdapter searchAdapter = new QuranSearchAdapter(QuranSearchActivity.this, ayahList);
-        recyclerView.setAdapter(searchAdapter );
+        recyclerView.setAdapter(searchAdapter);
 
 
         quranSearchET.addTextChangedListener(new TextWatcher() {
@@ -105,13 +105,13 @@ public class QuranSearchActivity extends AppCompatActivity {
                 language = Tools.GetDataFromSharePrefarence(QuranSearchActivity.this, "search_quran");
                 ayahList.clear();
                 search_key = s.toString();
-                if (!language.equals("")){
+                if (!language.equals("")) {
                     ayahList = db.searchQuranAyah(language, search_key);
-                } else{
+                } else {
                     ayahList = db.searchQuranAyah("En_Ahmed_Raza_Khan", search_key);
                 }
                 QuranSearchAdapter searchAdapter = new QuranSearchAdapter(QuranSearchActivity.this, ayahList);
-                recyclerView.setAdapter(searchAdapter );
+                recyclerView.setAdapter(searchAdapter);
             }
 
             @Override
@@ -162,43 +162,9 @@ public class QuranSearchActivity extends AppCompatActivity {
                     @Override
                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                         String lang = Objects.requireNonNull(sortAdapter.getItem(position));
-                        switch (lang) {
-                            case "Arabic Quran":
-                                Tools.SaveDataToSharePrefarence(QuranSearchActivity.this, "search_quran", "Ar_Uthamani");
-                                Tools.SaveDataToSharePrefarence(QuranSearchActivity.this, "search_quran_btn_txt", "Arabic");
-                                urls = new String[]{"/Muslims/Quran/islam_public_ar__uthmani.json", "Ar_Uthamani"};
-                                downloadData(urls);
-                                optionDialog.cancel();
-                                break;
-                            case "English Transliteration":
-                                Tools.SaveDataToSharePrefarence(QuranSearchActivity.this, "search_quran", "English_Transliteration");
-                                Tools.SaveDataToSharePrefarence(QuranSearchActivity.this, "search_quran_btn_txt", "En Transliteration");
-                                urls = new String[]{"/Muslims/Quran/islam_public_en__english__transliteration.json", "English_Transliteration"};
-                                downloadData(urls);
-                                optionDialog.cancel();
-                                break;
-                            case "Bangla Quran":
-                                Tools.SaveDataToSharePrefarence(QuranSearchActivity.this, "search_quran", "Bn_Muhiuddin_Khan");
-                                Tools.SaveDataToSharePrefarence(QuranSearchActivity.this, "search_quran_btn_txt", "Bangla");
-                                urls = new String[]{"/Muslims/Quran/islam_public_bn__muhiuddin__khan.json", "Bn_Muhiuddin_Khan"};
-                                downloadData(urls);
-                                optionDialog.cancel();
-                                break;
-                            case "English Quran":
-                                Tools.SaveDataToSharePrefarence(QuranSearchActivity.this, "search_quran", "En_Ahmed_Raza_Khan");
-                                Tools.SaveDataToSharePrefarence(QuranSearchActivity.this, "search_quran_btn_txt", "English");
-                                urls = new String[]{"/Muslims/Quran/islam_public_en__ahmed__raza__khan.json", "En_Ahmed_Raza_Khan"};
-                                downloadData(urls);
-                                optionDialog.cancel();
-                                break;
-                            case "Urdu Quran":
-                                Tools.SaveDataToSharePrefarence(QuranSearchActivity.this, "search_quran", "Ur_Ahmed_Raza_Khan");
-                                Tools.SaveDataToSharePrefarence(QuranSearchActivity.this, "search_quran_btn_txt", "Urdu");
-                                urls = new String[]{"/Muslims/Quran/islam_public_ur__ahmed__raza__khan.json", "Ur_Ahmed_Raza_Khan"};
-                                downloadData(urls);
-                                optionDialog.cancel();
-                                break;
-                        }
+                        ThreadDemo thread = new ThreadDemo(lang);
+                        thread.start();
+                        optionDialog.cancel();
                     }
                 });
 
@@ -214,122 +180,121 @@ public class QuranSearchActivity extends AppCompatActivity {
 
     }
 
-    private void downloadData(String[] urls) {
-        // instantiate it within the onCreate method
-        mProgressDialog = new ProgressDialog(this);
-        mProgressDialog.setMessage("Please Wait While Loading Data");
-        mProgressDialog.setIndeterminate(true);
-        mProgressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-        mProgressDialog.setCancelable(true);
-
-        // execute this when the downloader must be fired
-        final DownloadTask downloadTask = new DownloadTask(this);
-        downloadTask.execute(urls);
-        mProgressDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
-
-            @Override
-            public void onCancel(DialogInterface dialog) {
-                downloadTask.cancel(true); //cancel the task
+    private void downloadData(String[] sUrl) {
+        InputStream input = null;
+        OutputStream output = null;
+        HttpURLConnection connection = null;
+        try {
+            String last = sUrl[0].substring(sUrl[0].lastIndexOf('/') + 1);
+            URL url = new URL("https://raw.githubusercontent.com/SaymaShinha/islamDB/master/" + last);
+            connection = (HttpURLConnection) url.openConnection();
+            connection.connect();
+            // expect HTTP 200 OK, so we don't mistakenly save error report
+            // instead of the file
+            if (connection.getResponseCode() != HttpURLConnection.HTTP_OK) {
+                Toast.makeText(this, "Server returned HTTP " + connection.getResponseCode()
+                        + " " + connection.getResponseMessage(), Toast.LENGTH_LONG).show();
             }
-        });
-    }
 
-    // usually, subclasses of AsyncTask are declared inside the activity class.
-    // that way, you can easily modify the UI thread from here
-    private class DownloadTask extends AsyncTask<String, Integer, String> {
-        private Context context;
-        private PowerManager.WakeLock mWakeLock;
+            // this will be useful to display download percentage
+            // might be -1: server did not report the length
+            int fileLength = connection.getContentLength();
+            // download the file
+            input = connection.getInputStream();
 
-        public DownloadTask(Context context) {
-            this.context = context;
-        }
+            output = new FileOutputStream(ReadAndWriteFiles.getAppExternalFilesDir(QuranSearchActivity.this) + sUrl[0]);
 
-        @Override
-        protected String doInBackground(String... sUrl) {
-            InputStream input = null;
-            OutputStream output = null;
-            HttpURLConnection connection = null;
+            byte[] data = new byte[4096];
+            long total = 0;
+            int count;
+            while ((count = input.read(data)) != -1) {
+                total += count;
+                output.write(data, 0, count);
+            }
+        } catch (Exception e) {
+            Toast.makeText(this, e.toString(), Toast.LENGTH_LONG).show();
+        } finally {
             try {
-                String last = sUrl[0].substring(sUrl[0].lastIndexOf('/') + 1);
-                URL url = new URL("https://raw.githubusercontent.com/SaymaShinha/islamDB/master/" + last);
-                connection = (HttpURLConnection) url.openConnection();
-                connection.connect();
-                // expect HTTP 200 OK, so we don't mistakenly save error report
-                // instead of the file
-                if (connection.getResponseCode() != HttpURLConnection.HTTP_OK) {
-                    return "Server returned HTTP " + connection.getResponseCode()
-                            + " " + connection.getResponseMessage();
-                }
-
-                // this will be useful to display download percentage
-                // might be -1: server did not report the length
-                int fileLength = connection.getContentLength();
-                // download the file
-                input = connection.getInputStream();
-
-                output = new FileOutputStream(ReadAndWriteFiles.getAppExternalFilesDir(context) + sUrl[0]);
-
-                byte data[] = new byte[4096];
-                long total = 0;
-                int count;
-                while ((count = input.read(data)) != -1) {
-                    // allow canceling with back button
-                    if (isCancelled()) {
-                        input.close();
-                        return null;
-                    }
-                    total += count;
-                    // publishing the progress....
-                    if (fileLength > 0) // only if total length is known
-                        publishProgress((int) (total * 100 / fileLength));
-                    output.write(data, 0, count);
-                }
-            } catch (Exception e) {
-                return e.toString();
-            } finally {
-                try {
-                    if (output != null)
-                        output.close();
-                    if (input != null)
-                        input.close();
-                } catch (IOException ignored) {
-                }
-
-                if (connection != null) {
-                    connection.disconnect();
-                    ReadAndWriteFiles.readFileAndSaveQuranToDataBase(context, sUrl[0], sUrl[1]);
-                }
+                if (output != null)
+                    output.close();
+                if (input != null)
+                    input.close();
+            } catch (IOException ignored) {
             }
-            return null;
-        }
 
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            // take CPU lock to prevent CPU from going off if the user
-            // presses the power button during download
-            PowerManager pm = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
-            mWakeLock = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK,
-                    getClass().getName());
-            mWakeLock.acquire();
-            mProgressDialog.show();
-        }
-
-        @Override
-        protected void onProgressUpdate(Integer... progress) {
-            super.onProgressUpdate(progress);
-            // if we get here, length is known, now set indeterminate to false
-            mProgressDialog.setIndeterminate(false);
-            mProgressDialog.setMax(100);
-            mProgressDialog.setProgress(progress[0]);
-        }
-
-        @Override
-        protected void onPostExecute(String result) {
-            mWakeLock.release();
-            mProgressDialog.dismiss();
-            if (result != null)
-                Toast.makeText(context, result, Toast.LENGTH_LONG).show();
+            if (connection != null) {
+                connection.disconnect();
+                ReadAndWriteFiles.readFileAndSaveQuranToDataBase(this, sUrl[0], sUrl[1]);
+            }
         }
     }
+
+
+    class ThreadDemo extends Thread {
+        private Thread t;
+        private String threadName;
+        private Context context = QuranSearchActivity.this;
+
+        ThreadDemo(String name) {
+            threadName = name;
+            System.out.println("Creating " + threadName);
+        }
+
+        public void run() {
+            System.out.println("Running " + threadName);
+            try {
+                String lang = threadName;
+                switch (lang) {
+                    case "Arabic Quran":
+                        Tools.SaveDataToSharePrefarence(QuranSearchActivity.this, "search_quran", "Ar_Uthamani");
+                        Tools.SaveDataToSharePrefarence(QuranSearchActivity.this, "search_quran_btn_txt", "Arabic");
+                        db.updateQuranTranslatorSelected("Ar_Uthamani", true);
+                        downloadData(urls);
+                        break;
+                    case "English Transliteration":
+                        Tools.SaveDataToSharePrefarence(QuranSearchActivity.this, "search_quran", "English_Transliteration");
+                        Tools.SaveDataToSharePrefarence(QuranSearchActivity.this, "search_quran_btn_txt", "En Transliteration");
+                        urls = new String[]{"/Muslims/Quran/islam_public_en__english__transliteration.json", "English_Transliteration"};
+                        downloadData(urls);
+                        break;
+                    case "Bangla Quran":
+                        Tools.SaveDataToSharePrefarence(QuranSearchActivity.this, "search_quran", "Bn_Muhiuddin_Khan");
+                        Tools.SaveDataToSharePrefarence(QuranSearchActivity.this, "search_quran_btn_txt", "Bangla");
+                        db.updateQuranTranslatorSelected("Bn_Muhiuddin_Khan", true);
+                        urls = new String[]{"/Muslims/Quran/islam_public_bn__muhiuddin__khan.json", "Bn_Muhiuddin_Khan"};
+                        downloadData(urls);
+                        break;
+                    case "English Quran":
+                        Tools.SaveDataToSharePrefarence(QuranSearchActivity.this, "search_quran", "En_Ahmed_Raza_Khan");
+                        Tools.SaveDataToSharePrefarence(QuranSearchActivity.this, "search_quran_btn_txt", "English");
+                        db.updateQuranTranslatorSelected("En_Ahmed_Raza_Khan", true);
+                        downloadData(urls);
+                        break;
+                    case "Urdu Quran":
+                        Tools.SaveDataToSharePrefarence(QuranSearchActivity.this, "search_quran", "Ur_Ahmed_Raza_Khan");
+                        Tools.SaveDataToSharePrefarence(QuranSearchActivity.this, "search_quran_btn_txt", "Urdu");
+                        urls = new String[]{"/Muslims/Quran/islam_public_ur__ahmed__raza__khan.json", "Ur_Ahmed_Raza_Khan"};
+                        db.updateQuranTranslatorSelected("Ur_Ahmed_Raza_Khan", true);
+                        downloadData(urls);
+                        break;
+                }
+
+
+                // Let the thread sleep for a while.
+                Thread.sleep(50);
+            } catch (InterruptedException e) {
+                System.out.println("Thread " + threadName + " interrupted.");
+            }
+            System.out.println("Thread " + threadName + " exiting.");
+        }
+
+        public void start() {
+            System.out.println("Starting " + threadName);
+            if (t == null) {
+                t = new Thread(this, threadName);
+                t.start();
+            }
+        }
+    }
+
 }
