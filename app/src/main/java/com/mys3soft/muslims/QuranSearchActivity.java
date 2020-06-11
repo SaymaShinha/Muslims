@@ -5,6 +5,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.app.Dialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.text.Editable;
@@ -22,6 +23,7 @@ import com.mys3soft.muslims.Adapter.AyahAdapter;
 import com.mys3soft.muslims.Adapter.QuranSearchAdapter;
 import com.mys3soft.muslims.DataBase.DBHelper;
 import com.mys3soft.muslims.Models.Ayah;
+import com.mys3soft.muslims.Tools.ReadAndWriteFiles;
 import com.mys3soft.muslims.Tools.Tools;
 
 import java.util.ArrayList;

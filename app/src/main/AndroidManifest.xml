@@ -15,7 +15,7 @@
         android:fullBackupContent="@xml/backup_rules"
         android:icon="@mipmap/mosque_icon"
         android:label="@string/app_name"
-        android:roundIcon="@mipmap/ic_launcher_round"
+        android:roundIcon="@mipmap/mosque_icon_foreground"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity android:name=".QuranSearchActivity"></activity>

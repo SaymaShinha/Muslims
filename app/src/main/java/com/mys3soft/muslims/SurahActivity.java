@@ -84,6 +84,8 @@ public class SurahActivity extends AppCompatActivity {
     public void onStart() {
         super.onStart();
 
+        ayah_position_num = Integer.parseInt(Tools.GetDataFromSharePrefarence(SurahActivity.this, "ayah_last_position"));
+
         mAyahRecyclerView.scrollToPosition(ayah_position_num);
 
         arabic_lang = Tools.GetDataFromSharePrefarence(SurahActivity.this, "Arabic_Lang");
