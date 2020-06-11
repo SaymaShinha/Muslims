@@ -196,7 +196,7 @@ public class SurahActivity extends AppCompatActivity {
                 String ayah_last_position = Tools.GetDataFromSharePrefarence(SurahActivity.this, "ayah_last_position");
 
                 if (!ayah_last_position.equals("")) {
-                    ayah_position_num = Integer.valueOf(ayah_last_position);
+                    ayah_position_num = Integer.parseInt(ayah_last_position);
                 }
                 mAyahRecyclerView.scrollToPosition(ayah_position_num);
 

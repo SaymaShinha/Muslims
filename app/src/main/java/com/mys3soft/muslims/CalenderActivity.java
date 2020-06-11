@@ -99,14 +99,13 @@ public class CalenderActivity extends AppCompatActivity {
             @Override
             public void onCancel(DialogInterface dialog) {
                 downloadTask.cancel(true);//cancel the task
-                onStart();
             }
         });
     }
 
     // usually, subclasses of AsyncTask are declared inside the activity class.
     // that way, you can easily modify the UI thread from here
-    private static class DownloadTask extends AsyncTask<String, Integer, String> {
+    private class DownloadTask extends AsyncTask<String, Integer, String> {
         @SuppressLint("StaticFieldLeak")
         private Context context;
         private PowerManager.WakeLock mWakeLock;
@@ -201,6 +200,7 @@ public class CalenderActivity extends AppCompatActivity {
             else{
                 Toast.makeText(context, "File downloaded", Toast.LENGTH_SHORT).show();
             }
+            onStart();
         }
     }
 
