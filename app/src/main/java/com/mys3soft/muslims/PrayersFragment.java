@@ -178,7 +178,10 @@ public class PrayersFragment extends Fragment {
         string_date  =  today.split("-");
         location = Tools.GetDataFromSharePrefarence(context, "Location");
 
-        mLocationBtn.setText(location);
+        if (!location.equals("")){
+            mLocationBtn.setText(location);
+        }
+
         try {
             String date = Tools.GetDataFromSharePrefarence(context,"Date");
 
@@ -214,8 +217,10 @@ public class PrayersFragment extends Fragment {
                         downloadData( "http://api.aladhan.com/v1/timings/1398332113"+prayer_timings_file_name);
                     }
                 } else {
-                    prayer_timings_file_name = "city="+location.split(",")[0]+"&country="+location.split(",")[1].trim()+"&method=2";
-                    downloadData("http://api.aladhan.com/v1/timingsByCity?"+prayer_timings_file_name);
+                    if (!location.equals("")){
+                        prayer_timings_file_name = "city="+location.split(",")[0]+"&country="+location.split(",")[1].trim()+"&method=2";
+                        downloadData("http://api.aladhan.com/v1/timingsByCity?"+prayer_timings_file_name);
+                    }
                 }
             }
         } catch (Exception e) {

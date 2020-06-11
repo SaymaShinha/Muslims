@@ -55,15 +55,14 @@ public class CalenderActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(layoutManager);
 
         db = new DBHelper(this);
-        String string_date = Tools.get_Today_DD_MM_YYYY_FormatedDate();
-
-        showCalender(string_date);
-        onStart();
     }
 
     @Override
     protected void onStart() {
         super.onStart();
+        
+        String string_date = Tools.get_Today_DD_MM_YYYY_FormatedDate();
+        showCalender(string_date);
 
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
